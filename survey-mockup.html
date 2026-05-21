@@ -676,146 +676,140 @@
   // -------- state --------
   const state = { idx: 0, total: 3, poll: null, stats: null };
 
-  // -------- question pools (mix per session) --------
+  // -------- question pools (real Boostyfi products) --------
+  // ATLA = Atleta Network (sports L1, digital footballers)
+  // JGGL = AI-music, producer ownership of AI artists
+  // IMBA = music discovery, Digital Cards earning per stream
+  // TEKI/TPC = Arteki animation studio, Marsh Legends 2026
   const QUESTION_POOLS = {
-    phil: [
-      { title: 'Что для тебя сейчас в приоритете?', opts: [
-          ['protect', '🛡️', 'Защитить капитал от fiat collapse'],
-          ['stack',   '🪙', 'Накопить hard assets (silver / gold-backed)'],
-          ['yield',   '📈', 'Получать стабильный доход через стейкинг'] ] },
-      { title: 'Какой риск ты оцениваешь сейчас выше всего?', opts: [
-          ['hyper', '🔥', 'Гиперинфляция доллара'],
-          ['bank',  '🏦', 'Банковский крах / freeze счетов'],
-          ['cbdc',  '👁️', 'Введение CBDC и тотальный контроль'] ] },
-      { title: 'Куда бы переложил $10k завтра?', opts: [
-          ['metal',    '🥈', 'Silver / Gold (физика)'],
-          ['boostyfi', '⚡', 'ATLA / JGGL аллокация'],
-          ['cash',     '💼', 'Удержать в кеше — жду точку входа'] ] },
-      { title: 'За каким сигналом следишь плотнее всего?', opts: [
-          ['fed', '🏛️', 'Fed policy и ставка'],
-          ['dxy', '📊', 'DXY и индекс доллара'],
-          ['qfs', '💎', 'QFS / NESARA / Reset новости'] ] },
-      { title: 'Что важнее в hard-asset портфеле?', opts: [
-          ['phys',  '🪨', 'Физический металл в руках'],
-          ['token', '🔗', 'Tokenized asset с ликвидностью'],
-          ['mix',   '⚖️', 'Гибрид 50/50'] ] },
-    ],
-    brad: [
-      { title: 'К чему сейчас готовишься в первую очередь?', opts: [
-          ['event',  '⚡', 'The Event и EBS'],
-          ['gesara', '💎', 'GESARA / QFS transition'],
-          ['wait',   '🧘', 'Спокойный wait, держу позиции'] ] },
-      { title: 'Какой intel за неделю отозвался больше всего?', opts: [
-          ['military', '🎖️', 'Military ops / White Hats'],
-          ['election', '🗳️', 'Election integrity'],
-          ['ebs',      '📡', 'EBS readiness и сигналы'] ] },
-      { title: 'В чём твоя главная защита сейчас?', opts: [
-          ['faith',  '✝️', 'Faith и духовная подготовка'],
-          ['assets', '🛡️', 'Hard assets и крипто'],
-          ['comm',   '🤝', 'Community патриотов'] ] },
-      { title: 'На какой timeline ты ставишь?', opts: [
-          ['days',   '⏱️', 'Дни — события на пороге'],
-          ['weeks',  '📅', 'Недели'],
-          ['months', '🗓️', 'Месяцы — год сценария'] ] },
-      { title: 'Что важнее для портфеля сейчас?', opts: [
-          ['alloc',   '📥', 'Аллокация до Reset'],
-          ['staking', '🪙', 'Стейкинг и пассив'],
-          ['cash',    '💼', 'Кеш под нужный момент'] ] },
-    ],
-    none: [
-      { title: 'Что для тебя важнее всего на платформе?', opts: [
-          ['safe',   '🛡️', 'Безопасность капитала'],
-          ['grow',   '📈', 'Рост и доходность'],
-          ['simple', '✨', 'Простота и понятный интерфейс'] ] },
-      { title: 'Какую функцию ты ждёшь больше всего?', opts: [
-          ['app',  '📱', 'Мобильное приложение'],
-          ['auto', '🤖', 'Auto-stake / авто-реинвест'],
-          ['nft',  '🎨', 'NFT-маркет для сертификатов'] ] },
-      { title: 'Что бы добавил в личный кабинет?', opts: [
-          ['chart',   '📊', 'График портфеля по дням'],
-          ['history', '📜', 'Полную историю покупок'],
-          ['alerts',  '🔔', 'Уведомления о ценах'] ] },
-      { title: 'Какой токен интересует следующим?', opts: [
-          ['atla', '◆', 'ATLA — флагман'],
-          ['teki', '💠', 'TEKI — арт и роялти'],
-          ['imba', '🔥', 'IMBA — Brad-аллокация'] ] },
-      { title: 'Какой формат оплаты удобнее?', opts: [
-          ['card',   '💳', 'Банковская карта'],
-          ['crypto', '🪙', 'Crypto (USDT, BTC, ETH)'],
-          ['wire',   '🏦', 'Bank transfer / SWIFT'] ] },
+    general: [
+      { title: 'Что в Boostyfi тебе сейчас интереснее всего?', opts: [
+          ['atla', '🏟️', 'Atleta — digital footballers и Arena'],
+          ['jggl', '🎵', 'JGGL — AI-музыка, ты соинвестор артиста'],
+          ['imba', '💿', 'IMBA — найти трек первым, получать $IMBA со стримов'],
+          ['teki', '🎬', 'Arteki — доля в анимационных фильмах (TPC)'] ] },
+      { title: 'Какой проект ты планируешь добрать в этом квартале?', opts: [
+          ['atla',   '◆', 'ATLA · текущий раунд $25–50, +1000% upside'],
+          ['jggl',   '🎼', 'JGGL · раунд $0.91–1.76, +150% upside'],
+          ['imba',   '💎', 'IMBA Digital Card · трек, который стрельнёт'],
+          ['marsh',  '🎞️', 'Studio Pack Marsh Legends · до апреля 2026'] ] },
+      { title: 'Что для тебя главное в инвест-выборе на платформе?', opts: [
+          ['early',  '🚀', 'Ранний вход — войти по цене раунда'],
+          ['util',   '🏆', 'Утилитарность — стейкинг, голосования, перки'],
+          ['share',  '🎁', 'Доля в проекте — роялти от стримов / показов'],
+          ['comm',   '🤝', 'Сообщество и закрытые события'] ] },
+      { title: 'Сколько ты готов вложить в следующем шаге?', opts: [
+          ['lt200',   '💵', 'До $200'],
+          ['200-1k',  '💸', '$200 – $1 000'],
+          ['1k-5k',   '💰', '$1 000 – $5 000'],
+          ['5k+',     '🪙', '$5 000+'] ] },
+      { title: 'Какой апдейт ты ждёшь больше всего?', opts: [
+          ['arena',  '🏟️', 'Запуск Blockchain Sports Arena (ATLA)'],
+          ['app',    '🎵', 'Релиз JGGL App с эмоциональной музыкой'],
+          ['marsh',  '🎬', 'Премьера Marsh Legends 2026 (Arteki)'],
+          ['imba',   '🎤', 'Новых артистов и треков в IMBA'] ] },
+      { title: 'Что бы добавил в личный кабинет первым?', opts: [
+          ['charts', '📊', 'Графики цены и портфеля по дням'],
+          ['plan',   '🎯', 'Авто-копилка / рассрочка под раунд'],
+          ['lead',   '🏅', 'Лидерборд и геймификацию'],
+          ['app',    '📱', 'Мобильное приложение'] ] },
+      { title: 'Что важнее в твоей стратегии?', opts: [
+          ['max',    '💰', 'Заработать максимум до листинга'],
+          ['long',   '🏗️', 'Поддержать проекты долгосрочно'],
+          ['all',    '🎲', 'Попробовать понемногу всё'],
+          ['collect','🧩', 'Собрать полную коллекцию 4-х проектов'] ] },
+      { title: 'Откуда узнаёшь о новых раундах и дропах?', opts: [
+          ['streamer', '🎙️', 'Со стримов (Phil / Brad)'],
+          ['tg',       '✈️', 'Telegram-канал Boostyfi'],
+          ['friends',  '👥', 'От друзей / по рефералке'],
+          ['site',     '🌐', 'Сам захожу на сайт'] ] },
+      { title: 'Какой формат уведомлений удобнее?', opts: [
+          ['push',  '🔔', 'Push в Telegram'],
+          ['email', '📧', 'Email раз в неделю'],
+          ['big',   '⚡', 'Только большие события (новые раунды)'],
+          ['off',   '🤐', 'Без уведомлений'] ] },
     ],
     whale: [
-      { title: 'Что для вас сейчас в приоритете в портфеле?', opts: [
-          ['protect', '🛡️', 'Защита крупной позиции'],
-          ['yield',   '💰', 'Максимизация доходности'],
-          ['private', '🔒', 'Закрытые / private аллокации'] ] },
+      { title: 'Какой проект приоритетен для расширения позиции?', opts: [
+          ['atla',  '🏟️', 'ATLA — Atleta Network'],
+          ['music', '🎵', 'JGGL / IMBA — музыкальное направление'],
+          ['arteki','🎬', 'Arteki TPC — Studio Packs'],
+          ['split', '🌐', 'Разделить пропорционально по всем 4-м'] ] },
       { title: 'Какой формат коммуникации удобнее?', opts: [
-          ['tg',    '✈️', 'Telegram с персональным менеджером'],
-          ['email', '📧', 'Email-дайджест раз в неделю'],
-          ['call',  '📞', 'Звонок 1 раз в месяц'] ] },
+          ['tg',    '✈️', 'Личный менеджер в Telegram'],
+          ['call',  '📞', 'Звонок раз в квартал'],
+          ['email', '📧', 'Email-дайджест с цифрами'],
+          ['disco', '🚪', 'Доступ в закрытый Discord-канал'] ] },
       { title: 'Что важнее в private allocation?', opts: [
-          ['excl',  '💎', 'Эксклюзивность доступа'],
-          ['speed', '⚡', 'Скорость оформления'],
-          ['tax',   '📋', 'Налоговая и юридическая структура'] ] },
+          ['price', '💎', 'Цена ниже текущего публичного раунда'],
+          ['speed', '⚡', 'Скорость оформления (минуя очередь)'],
+          ['legal', '📋', 'Юридическая обвязка и tax wrapper'],
+          ['team',  '🤝', 'Прямой контакт с командой проекта'] ] },
+      { title: 'Готовы участвовать в Studio Pack Marsh Legends крупным объёмом?', opts: [
+          ['yes',   '✅', 'Готов — обсудить условия'],
+          ['info',  '❓', 'Нужно больше информации'],
+          ['later', '🎬', 'Интересует, но позже'],
+          ['no',    '❌', 'Сейчас не в фокусе'] ] },
+      { title: 'Что важнее всего на платформе?', opts: [
+          ['early', '🚀', 'Доступ к раундам раньше публики'],
+          ['vip',   '🏆', 'VIP-перки, лидерборд и закрытые ивенты'],
+          ['data',  '💼', 'Расширенная аналитика по портфелю'],
+          ['priv',  '🛡️', 'Privacy и контроль доступа'] ] },
       { title: 'Какой объём готовы расширить в следующем квартале?', opts: [
-          ['100', '◆', '+$100k'],
-          ['500', '◆◆', '+$500k'],
+          ['100', '◆',   '+$100k'],
+          ['500', '◆◆',  '+$500k'],
           ['1m',  '◆◆◆', '+$1M'],
-          ['mgr', '✦', 'Решу с менеджером'] ] },
-      { title: 'Какие проекты хотели бы увидеть следующими?', opts: [
-          ['re',     '🏠', 'Real estate tokenization'],
-          ['commod', '🛢️', 'Commodities (нефть / металлы)'],
-          ['tech',   '🚀', 'Tech equity / pre-IPO'] ] },
+          ['mgr', '✦',   'Решу с менеджером'] ] },
     ],
   };
 
-  // -------- stat pools (rotated each session) --------
+  // -------- stat pools (real Boostyfi numbers) --------
   const STAT_POOLS = [
     {
-      label: 'JGGL прорвал ATH',
+      label: 'Раунды на старте',
       rows: [
-        { ico:'⚡', label:'JGGL · цена',    val:'$2.14',  delta:'▲ +547%',  period:'за 6 месяцев',     color:'up'   },
-        { ico:'◆', label:'ATLA · цена',    val:'$213',   delta:'▲ +312%',  period:'с листинга',       color:'up'   },
-        { ico:'💎', label:'Стейкинг APY',  val:'38.4%',  delta:'▲ +6.2%',  period:'к прошлому месяцу',color:'gold' },
-        { ico:'👥', label:'Сообщество',    val:'27 408', delta:'▲ +1 240', period:'за неделю',        color:'blue' },
+        { ico:'🏟️', label:'ATLA · текущий раунд', val:'$25–50', delta:'+1000% upside', period:'до 07.04.2026', color:'up'   },
+        { ico:'🎵', label:'JGGL · цена раунда',   val:'$0.91–1.76', delta:'+150% upside', period:'до 07.04.2026', color:'gold' },
+        { ico:'🎬', label:'Arteki Studio Pack',   val:'Phase A',   delta:'best TPC/USDT', period:'до апреля 2026', color:'gold' },
+        { ico:'💿', label:'IMBA эмиссия',         val:'700M',  delta:'deflationary',   period:'fixed supply',  color:'blue' },
       ],
-      hi: { pct:'+547%', text:'JGGL — топ-перформер платформы. Следующий апдейт стейкинга через 5 дней.' },
+      hi: { pct:'+1000%', text:'ATLA — лучшая цена раунда до 07.04.2026. Дальше прайс пересматривается.' },
     },
     {
-      label: 'Квартал на закрытии',
+      label: 'Цифры экосистемы',
       rows: [
-        { ico:'🔥', label:'Объём за неделю', val:'$3.2M',  delta:'▲ +89%',  period:'к прошлой',       color:'up'   },
-        { ico:'💎', label:'Toon Certs',     val:'1 247',  delta:'▲ +340',  period:'выпущено за месяц',color:'gold' },
-        { ico:'⚡', label:'JGGL · цена',    val:'$2.14',  delta:'▲ +547%', period:'за 6 месяцев',    color:'up'   },
-        { ico:'🏆', label:'Топ-стейкер',    val:'$184k',  delta:'награда', period:'квартала',         color:'gold' },
+        { ico:'💼', label:'Invested в JGGL',  val:'$18M+',  delta:'▲ растёт',  period:'с начала продаж',  color:'up'   },
+        { ico:'👥', label:'Users в JGGL App', val:'2.4M+',  delta:'▲ +X недели', period:'на этой неделе',  color:'blue' },
+        { ico:'🎼', label:'Tracks generated', val:'180K+',  delta:'▲ +12K',    period:'за месяц',         color:'gold' },
+        { ico:'⚡', label:'Active users',     val:'47K+',   delta:'▲ +8%',     period:'к прошлому месяцу', color:'up'   },
       ],
-      hi: { pct:'Q4', text:'Финальный месяц для quarterly bonuses — позиции фиксируются 30 числа.' },
+      hi: { pct:'LIVE', text:'JGGL Bot + JGGL Web уже работают. App в финальной стадии — продукт живой.' },
     },
     {
-      label: 'TEKI вышел в топ-3',
+      label: 'Календарь дропов',
       rows: [
-        { ico:'◆', label:'ATLA · цена',     val:'$213',  delta:'▲ +312%', period:'с листинга',     color:'up'   },
-        { ico:'🪙', label:'Total staked',   val:'$8.4M', delta:'▲ +22%',  period:'за 30 дней',     color:'up'   },
-        { ico:'🚀', label:'Новых юзеров',   val:'+4 280',delta:'▲ +18%',  period:'за неделю',      color:'blue' },
-        { ico:'🎨', label:'TEKI mints',     val:'612',   delta:'▲ +91',   period:'за 7 дней',      color:'gold' },
+        { ico:'⏰', label:'ATLA next round', val:'19.01.2026', delta:'price ↑',  period:'до конца раунда', color:'up'   },
+        { ico:'⏰', label:'JGGL next round', val:'15.02.2026', delta:'price ↑',  period:'до конца раунда', color:'gold' },
+        { ico:'🎞️', label:'Marsh Legends',  val:'2026',       delta:'премьера', period:'первый фильм Arteki', color:'gold' },
+        { ico:'🎬', label:'Arteki Phase B', val:'апрель 2026',delta:'после',    period:'смена условий TPC',color:'blue' },
       ],
-      hi: { pct:'NEW', text:'TEKI вышел в топ-3 платформы. Идёт листинг на новой бирже — окно входа открыто.' },
+      hi: { pct:'2-3 мес', text:'До смены раундов ATLA и JGGL — успей зайти по текущим ценам.' },
     },
     {
-      label: 'Whale-движение в стейкинге',
+      label: 'Marsh Legends — на горизонте',
       rows: [
-        { ico:'🐋', label:'Whale stakes',   val:'$2.1M', delta:'▲ +$640k',period:'за 7 дней',      color:'up'   },
-        { ico:'💎', label:'Avg pack',       val:'$1 480',delta:'▲ +12%',  period:'к прошлой неделе',color:'gold'},
-        { ico:'⚡', label:'JGGL · цена',    val:'$2.14', delta:'▲ +547%', period:'за 6 месяцев',   color:'up'   },
-        { ico:'📡', label:'Реф-активация',  val:'+38%',  delta:'▲ +6%',   period:'за месяц',       color:'blue' },
+        { ico:'🎬', label:'Фильмов в проекте', val:'6 + сериал', delta:'единая сага', period:'кинематографическая вселенная', color:'gold' },
+        { ico:'🎨', label:'Arteki Studio',     val:'Phase A',    delta:'open now',    period:'best TPC per USDT', color:'up'   },
+        { ico:'🏆', label:'Marsh Legends',     val:'2026',       delta:'релиз',       period:'фэнтези / 1ч 30м',  color:'gold' },
+        { ico:'💎', label:'TPC holders',       val:'ownership',  delta:'доля',        period:'в прибылях с показов', color:'blue' },
       ],
-      hi: { pct:'+$640k', text:'Крупные холдеры заходят в стейкинг — паттерн ровно как перед последним пампом.' },
+      hi: { pct:'TPC', text:'Toon Property Certificates дают долю в прибылях анимационных фильмов Arteki.' },
     },
   ];
 
   function pickPoll(s, tier) {
-    const key = tier === 'whale' ? 'whale' : s.streamer;
-    const pool = QUESTION_POOLS[key] || QUESTION_POOLS.none;
+    const key = tier === 'whale' ? 'whale' : 'general';
+    const pool = QUESTION_POOLS[key];
     return pool[Math.floor(Math.random() * pool.length)];
   }
   function pickStats() {
@@ -825,14 +819,22 @@
   // -------- creatives (SVG) --------
   function paletteFor(kind, streamer, tier) {
     if (tier === 'whale') {
-      return { from: '#000000', to: '#101010', accent: '#d4af37', tag: 'VIP · BLACK TIER' };
+      return { from: '#000000', to: '#101010', accent: '#d4af37', tag: 'VIP · BLACK TIER · PRIVATE' };
     }
-    const byStreamer = {
-      phil: { from: '#1a1f33', to: '#3b2a10', accent: '#d4a64a', tag: 'PHIL · HARD ASSETS' },
-      brad: { from: '#0b1a2e', to: '#3a0f1a', accent: '#e84a3a', tag: 'BRAD · GREAT AWAKENING' },
-      none: { from: '#1a0d10', to: '#2a0f15', accent: '#ff8a3d', tag: 'BOOSTYFI' },
-    }[streamer] || { from:'#1a0d10', to:'#2a0f15', accent:'#ff8a3d', tag:'BOOSTYFI' };
-    return byStreamer;
+    // eyebrow now reflects card kind (not streamer narrative)
+    const tagByKind = {
+      opinion: 'BOOSTYFI · YOUR VOICE',
+      info:    'BOOSTYFI · ECOSYSTEM',
+      sales:   'BOOSTYFI · PERSONAL OFFER',
+    };
+    // streamer влияет только на палитру (отметка ветки источника)
+    const palByStreamer = {
+      phil: { from: '#1a1730', to: '#3b1a10', accent: '#ff8a3d' },
+      brad: { from: '#0e1830', to: '#3a0f1a', accent: '#ff5a1f' },
+      none: { from: '#1a0d10', to: '#2a0f15', accent: '#ff8a3d' },
+    };
+    const pal = palByStreamer[streamer] || palByStreamer.none;
+    return { ...pal, tag: tagByKind[kind] || 'BOOSTYFI' };
   }
   function soundwave(color) {
     let bars = '';
@@ -960,13 +962,9 @@
 
     const head = tier === 'whale'
       ? `${s.name}, ваше мнение формирует roadmap`
-      : narr(s.streamer, {
-          phil: 'Твой ответ — наш следующий шаг',
-          brad: 'Мы читаем каждый ответ',
-          none: 'Помоги нам стать лучше',
-        });
+      : `${s.name}, твой ответ влияет на следующий релиз`;
     const badge = tier === 'whale'
-      ? `<div class="m-badge"><span class="pulse"></span> Private survey</div>`
+      ? `<div class="m-badge"><span class="pulse"></span> Private survey · BLACK TIER</div>`
       : `<div class="m-badge"><span class="pulse"></span> ${randCount(8000, 14000)} уже ответили</div>`;
 
     modal.innerHTML = `
@@ -1023,11 +1021,7 @@
 
     const head = tier === 'whale'
       ? `${s.name}, ваш портфель за квартал: ${portfolioGrowth}`
-      : narr(s.streamer, {
-          phil: 'Hard assets держат удар. Смотри цифры.',
-          brad: 'Сигналы платформы за последние 90 дней',
-          none: 'Что произошло с твоими токенами',
-        });
+      : `Цифры экосистемы Boostyfi · Q1 2026`;
 
     const personalRow = tier === 'whale' || tier === 'high'
       ? `<div class="vip-banner${tier === 'whale' ? ' whale-banner' : ''}">
@@ -1085,15 +1079,11 @@
 
     const head = tier === 'whale'
       ? `${s.name}, ваш персональный слот готов`
-      : narr(s.streamer, {
-          phil: 'Готовый оффер под твою стратегию',
-          brad: 'Закрытый слот — лимит на 24 часа',
-          none: 'Персональный оффер от менеджера',
-        });
+      : `Готовый оффер от менеджера Boostyfi`;
 
     const greeting = tier === 'whale'
-      ? `Здравствуйте, ${s.name}! Это ${mgr.name}, ваш персональный менеджер в Boostyfi. Подготовил для вас закрытое предложение по аллокации (${o.product}). Удобно обсудить сегодня?`
-      : `Привет! Меня заинтересовал оффер «${o.title}» (${o.product}). Готов обсудить детали и оформить.`;
+      ? `Здравствуйте, ${s.name}! Это ${mgr.name}, ваш персональный менеджер в Boostyfi. Подготовил для вас закрытое предложение: ${o.product}. Удобно обсудить сегодня в Telegram или назначить звонок?`
+      : `Привет! Я с Boostyfi, видел оффер «${o.title}» в личном кабинете. Готов оформить — расскажите детали по ${o.product}.`;
 
     const vipRow = (tier === 'whale')
       ? `<div class="vip-banner whale-banner">
@@ -1167,63 +1157,78 @@
     return { name: 'Команда', role: 'Sales · BoostyFi' };
   }
 
-  // -------- offer rules with tier overlay --------
+  // -------- offer rules (real Boostyfi products) --------
   function pickOffer(s, tier) {
-    const streamerLabel = { phil: 'Phil', brad: 'Brad', none: '' }[s.streamer];
-    const wrap = (t) => streamerLabel === 'Phil' ? `Hard-asset slot: ${t}`
-                     : streamerLabel === 'Brad' ? `White Hat allocation: ${t}` : t;
-
+    // WHALE — private placements
     if (tier === 'whale') {
       if (s.div === 'all-but-one') return {
-        title: `Закрытая аллокация — финальный слот`,
-        product: 'Private placement · IMBA + ATLA + Founders Discord · персональный звонок',
-        oldPrice: 250000, newPrice: 180000, bonusPct: 25, social: 7, slug: 'whale-final-slot',
+        title: 'Закрой коллекцию — финальный слот Arteki',
+        product: 'Private TPC allocation · Marsh Legends Studio Pack + Founders Discord',
+        oldPrice: 250000, newPrice: 180000, bonusPct: 25, social: 7, slug: 'whale-marsh-final',
+      };
+      if (s.div === 'one') return {
+        title: 'Расширь портфель: ATLA + JGGL + TPC одним пакетом',
+        product: 'Private 4-Project Pack · ATLA × JGGL × IMBA × Arteki TPC',
+        oldPrice: 220000, newPrice: 165000, bonusPct: 22, social: 9, slug: 'whale-4pack',
       };
       return {
         title: 'Founders Round · персональная аллокация',
-        product: 'Private placement · 5× Founders Pack + квартальный звонок с командой',
+        product: 'Private placement · 5× pack по выбору + квартальный звонок с командой',
         oldPrice: 150000, newPrice: 99000, bonusPct: 22, social: 12, slug: 'whale-founders',
       };
     }
+    // HIGH ($100k tier)
     if (tier === 'high') {
+      if (s.div === 'all-but-one') return {
+        title: 'Заверши коллекцию — последний проект по закрытой цене',
+        product: 'Closed Pack · IMBA Digital Cards × 10 + бонус TPC',
+        oldPrice: 18900, newPrice: 13500, bonusPct: 20, social: 22, slug: 'high-finish',
+      };
       return {
-        title: wrap('Senior pack — расширь крупную позицию'),
-        product: 'Senior Booster · 3× ATLA + JGGL + приоритетная очередь к дропам',
-        oldPrice: 12900, newPrice: 8900, bonusPct: 18, social: 38, slug: 'senior-booster',
+        title: 'Senior Booster — расширь крупную позицию',
+        product: 'Senior Pack · 3× ATLA + JGGL + приоритет к раундам',
+        oldPrice: 12900, newPrice: 8900, bonusPct: 18, social: 38, slug: 'high-senior',
       };
     }
+    // MID ($25-50k tier)
     if (tier === 'mid') {
       if (s.div === 'one') return {
-        title: wrap('Добавь второй проект — диверсификация ×2'),
-        product: 'Diversify Pack · TEKI + IMBA в одном паке',
-        oldPrice: 890, newPrice: 690, bonusPct: 12, social: 188, slug: 'diversify-pack',
+        title: 'Добавь второй проект — Diversify Pack',
+        product: 'TPC Studio Starter + IMBA Digital Card · 2 проекта одним заходом',
+        oldPrice: 890, newPrice: 690, bonusPct: 12, social: 188, slug: 'mid-diversify',
+      };
+      if (s.div === 'two') return {
+        title: 'Закрой 3-й проект — Arteki TPC по early-phase цене',
+        product: 'Arteki Studio Pack · TPC на Marsh Legends, доля в прибыли',
+        oldPrice: 1190, newPrice: 890, bonusPct: 14, social: 142, slug: 'mid-arteki',
       };
       return {
-        title: wrap('Mid Booster — усиль позицию'),
-        product: 'Mid Booster Pack · 1.5× к текущему балансу',
+        title: 'Mid Booster · усиль позицию ATLA',
+        product: 'ATLA × 1.5 Booster + JGGL bonus pack',
         oldPrice: 690, newPrice: 490, bonusPct: 12, social: 174, slug: 'mid-booster',
       };
     }
-    // starter
+    // STARTER ($5k tier)
     if (s.div === 'bits') return {
-      title: wrap('Starter Focus — собери ядро портфеля'),
-      product: 'Focus Starter · ATLA + JGGL в одной точке входа',
+      title: 'Сфокусируйся — Focus Starter под один проект',
+      product: 'Focus Pack · ATLA или JGGL × 2 (выбор) + welcome бонус',
       oldPrice: 199, newPrice: 129, bonusPct: 15, social: 312, slug: 'starter-focus',
     };
-    if (streamerLabel === 'Phil') return {
-      title: 'Phil-стек: удвой ставку JGGL и hard-asset бонус',
-      product: 'JGGL ×2 + silver-backed бонус (10% к покупке)',
-      oldPrice: 129, newPrice: 89, bonusPct: 15, social: 237, slug: 'phil-jggl-x2',
+    if (s.div === 'one') return {
+      title: 'Добери JGGL в текущем раунде',
+      product: 'JGGL Booster Pack · 2× по цене раунда + закрытый Discord',
+      oldPrice: 129, newPrice: 89, bonusPct: 15, social: 237, slug: 'starter-jggl-x2',
     };
-    if (streamerLabel === 'Brad') return {
-      title: 'Brad-аллокация: IMBA ×2 до The Event',
-      product: 'IMBA Booster Pack · ранний доступ к дропам Great Awakening',
-      oldPrice: 129, newPrice: 89, bonusPct: 15, social: 198, slug: 'brad-imba-x2',
+    if (s.div === 'two') return {
+      title: 'Зайди в Arteki по early-phase — TPC до апреля 2026',
+      product: 'Arteki Studio Starter · TPC на Marsh Legends + бонус IMBA Card',
+      oldPrice: 149, newPrice: 99, bonusPct: 14, social: 198, slug: 'starter-arteki',
     };
+    // default starter
     return {
-      title: 'Welcome Pack',
-      product: 'First-time Pack · Phil или Brad на выбор + welcome бонус',
-      oldPrice: 149, newPrice: 99, bonusPct: 12, social: 421, slug: 'welcome',
+      title: 'Welcome Pack · войди в Boostyfi со скидкой первого входа',
+      product: 'First-time Pack · ATLA или JGGL на выбор + welcome bonus',
+      oldPrice: 149, newPrice: 99, bonusPct: 12, social: 421, slug: 'starter-welcome',
     };
   }
 
