@@ -214,21 +214,72 @@
 
   /* Creative banner */
   .m-creative {
-    width: 100%; height: 170px;
+    width: 100%; height: 190px;
     position: relative; overflow: hidden;
     display: flex; align-items: center; justify-content: center;
     color: #fff;
   }
   .m-creative svg.bg { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .m-creative .ovrl { position: relative; z-index: 1; padding: 22px 24px 0; text-align: center; }
+  .m-creative .ovrl { position: relative; z-index: 1; padding: 30px 24px 0; text-align: center; }
   .m-creative .eyebrow {
+    display: inline-block;
     font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
-    opacity: .85; font-weight: 700;
+    font-weight: 800; padding: 4px 12px; border-radius: 999px;
+    background: rgba(255,255,255,.14);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,.22);
   }
   .m-creative .head {
-    font-size: 22px; font-weight: 800; line-height: 1.15; margin-top: 4px;
-    text-shadow: 0 1px 8px rgba(0,0,0,.5);
+    font-size: 28px; font-weight: 800; line-height: 1.12; margin-top: 10px;
+    text-shadow: 0 2px 14px rgba(0,0,0,.55);
+    letter-spacing: -.01em;
   }
+  /* Shimmer sweep on creative */
+  .m-creative::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(120deg,
+      transparent 35%,
+      rgba(255,255,255,.18) 50%,
+      transparent 65%);
+    transform: translateX(-100%);
+    animation: shimmer 4s ease-in-out infinite;
+    pointer-events: none; z-index: 2;
+  }
+  @keyframes shimmer {
+    0%   { transform: translateX(-100%); }
+    60%  { transform: translateX(100%); }
+    100% { transform: translateX(100%); }
+  }
+  /* Floating badge top-left of creative */
+  .m-badge {
+    position: absolute; top: 42px; left: 16px;
+    background: rgba(0,0,0,.4);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    color: #fff; font-size: 10px; font-weight: 800;
+    padding: 5px 10px; border-radius: 999px;
+    letter-spacing: .12em; text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,.22);
+    z-index: 3;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .m-badge .pulse {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #4ade80; box-shadow: 0 0 0 0 #4ade80;
+    animation: pulse 1.6s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(74,222,128,.7); }
+    70%  { box-shadow: 0 0 0 10px rgba(74,222,128,0); }
+    100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
+  }
+  .modal.whale .m-badge { color: #d4af37; border-color: rgba(212,175,55,.4); }
+  .modal.whale .m-badge .pulse { background: #d4af37; }
+  @keyframes pulse-gold {
+    0%   { box-shadow: 0 0 0 0 rgba(212,175,55,.6); }
+    70%  { box-shadow: 0 0 0 10px rgba(212,175,55,0); }
+    100% { box-shadow: 0 0 0 0 rgba(212,175,55,0); }
+  }
+  .modal.whale .m-badge .pulse { animation: pulse-gold 1.6s infinite; }
 
   .m-body { padding: 20px 28px 8px; }
   .m-title { font-size: 20px; font-weight: 700; margin: 0 0 6px; line-height: 1.3; }
@@ -239,24 +290,60 @@
     margin-bottom: 6px;
   }
 
-  .m-options { padding: 4px 28px 8px; display: flex; flex-direction: column; gap: 8px; }
+  .m-options { padding: 4px 28px 8px; display: flex; flex-direction: column; gap: 10px; }
   .opt {
-    border: 1.5px solid var(--line); border-radius: 12px;
+    position: relative;
+    border: 1.5px solid var(--line); border-radius: 14px;
     padding: 12px 14px; cursor: pointer;
     display: flex; align-items: center; gap: 12px;
-    font-size: 14px; font-weight: 500;
-    transition: border-color .15s, background .15s;
+    font-size: 14px; font-weight: 600; color: #15151a;
+    background: #fff;
+    transition: all .18s ease;
   }
-  .opt:hover { border-color: #c8c9d0; background: #fafafb; }
-  .opt .dot-r {
-    width: 16px; height: 16px; border-radius: 50%;
-    border: 2px solid #c8c9d0; flex: 0 0 auto;
+  .opt:hover {
+    border-color: #ffb37a; transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(232,52,26,.10);
+  }
+  .opt-emoji {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, #fff0e6, #ffe3d0);
     display: inline-flex; align-items: center; justify-content: center;
+    font-size: 20px; flex: 0 0 auto;
+    box-shadow: inset 0 0 0 1px rgba(255,138,61,.18);
   }
-  .opt.selected { border-color: var(--accent); background: #fff6f0; }
-  .opt.selected .dot-r { border-color: var(--accent); }
-  .opt.selected .dot-r::after {
-    content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+  .opt-text { flex: 1; line-height: 1.3; }
+  .opt-check {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid #d8d9df; flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: transparent; font-weight: 800; font-size: 14px;
+    transition: all .15s;
+  }
+  .opt.selected {
+    border-color: var(--accent);
+    background: linear-gradient(180deg, #fff8f3, #fff);
+    box-shadow: 0 6px 18px rgba(232,52,26,.15);
+  }
+  .opt.selected .opt-check {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+  }
+  .opt.selected .opt-emoji {
+    background: linear-gradient(135deg, #ffd6b8, #ffb37a);
+  }
+  .modal.whale .opt:hover {
+    border-color: #d4af37; box-shadow: 0 6px 14px rgba(212,175,55,.18);
+  }
+  .modal.whale .opt.selected {
+    border-color: #1a1a1a;
+    background: linear-gradient(180deg, #fafafa, #fff);
+    box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  }
+  .modal.whale .opt.selected .opt-check {
+    background: #1a1a1a; border-color: #1a1a1a; color: #d4af37;
+  }
+  .modal.whale .opt-emoji {
+    background: linear-gradient(135deg, #f5f0e0, #ebe2c8);
+    box-shadow: inset 0 0 0 1px rgba(212,175,55,.25);
   }
   .m-textarea {
     width: calc(100% - 56px);
@@ -304,21 +391,55 @@
     display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
   }
   .stat {
-    background: #fafafb; border: 1px solid var(--line);
-    border-radius: 14px; padding: 12px 14px;
+    position: relative; overflow: hidden;
+    background: linear-gradient(180deg, #fff 0%, #fafafb 100%);
+    border: 1px solid var(--line);
+    border-radius: 16px; padding: 14px 16px;
+    transition: transform .15s, box-shadow .15s;
   }
-  .stat .label { font-size: 11px; color: #9ca0a8; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
-  .stat .val { font-size: 22px; font-weight: 800; margin-top: 4px; color: #111; }
-  .stat .up { color: #027a48; font-weight: 700; font-size: 13px; margin-top: 2px; }
-  .stat .down { color: #b91c1c; font-weight: 700; font-size: 13px; margin-top: 2px; }
-  .spark { margin-top: 6px; }
+  .stat:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,.08); }
+  .stat .stat-ico {
+    display: inline-flex; width: 34px; height: 34px; border-radius: 10px;
+    align-items: center; justify-content: center;
+    font-size: 17px;
+    background: linear-gradient(135deg, #ff8a3d, #e8341a);
+    color: #fff; margin-bottom: 8px;
+    box-shadow: 0 4px 10px rgba(232,52,26,.25);
+  }
+  .stat.up    .stat-ico { background: linear-gradient(135deg, #4ade80, #16a34a); box-shadow: 0 4px 10px rgba(22,163,74,.25); }
+  .stat.gold  .stat-ico { background: linear-gradient(135deg, #ffd97a, #d4a64a); box-shadow: 0 4px 10px rgba(212,166,74,.30); }
+  .stat.blue  .stat-ico { background: linear-gradient(135deg, #6ec1f7, #5e8df0); box-shadow: 0 4px 10px rgba(94,141,240,.25); }
+  .stat .label { font-size: 11px; color: #9ca0a8; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+  .stat .val { font-size: 26px; font-weight: 800; margin-top: 4px; color: #111; letter-spacing: -.02em; }
+  .stat .delta {
+    margin-top: 4px; font-weight: 700; font-size: 12px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .stat .delta.up   { color: #16a34a; }
+  .stat .delta.down { color: #b91c1c; }
+  .stat .period { color: #9ca0a8; font-weight: 500; margin-left: 4px; }
+  .spark { margin-top: 8px; }
+  .modal.whale .stat .stat-ico { background: linear-gradient(135deg, #1a1a1a, #000); color: #d4af37; box-shadow: 0 4px 10px rgba(0,0,0,.25); }
+
   .info-row {
     margin: 4px 28px 14px;
     display: flex; gap: 12px; align-items: center;
-    background: #fff6f0; border: 1px solid #ffd6b8; border-radius: 12px;
-    padding: 10px 12px; font-size: 13px; color: #92340a;
+    background: linear-gradient(90deg, #fff6f0, #fff0e6);
+    border: 1px solid #ffd6b8; border-radius: 14px;
+    padding: 12px 14px; font-size: 13px; color: #92340a;
+    font-weight: 500;
   }
-  .info-row .pct { font-size: 18px; font-weight: 800; color: #b8410d; }
+  .info-row .pct {
+    font-size: 22px; font-weight: 800; color: #b8410d;
+    padding: 4px 10px; border-radius: 10px;
+    background: rgba(255,255,255,.7);
+    text-shadow: 0 1px 2px rgba(184,65,13,.15);
+  }
+  .modal.whale .info-row {
+    background: linear-gradient(90deg, #fafafa, #f0f0f0);
+    border-color: #d4d4d4; color: #1a1a1a;
+  }
+  .modal.whale .info-row .pct { color: #1a1a1a; background: #fff; }
 
   /* Card 3 — sales / manager */
   .mgr-card {
@@ -446,6 +567,7 @@
   </label>
   <span class="spacer"></span>
   <span id="tier-pill" class="pill">starter-tier</span>
+  <button id="btn-shuffle">🎲 Перемешать пул</button>
   <button id="btn-replay" class="primary">↻ Показать стек 3 модалок</button>
   <button id="btn-reset">Сбросить</button>
 </div>
@@ -552,7 +674,153 @@
   $('seg-name').addEventListener('input', updateUserPill);
 
   // -------- state --------
-  const state = { idx: 0, total: 3 };
+  const state = { idx: 0, total: 3, poll: null, stats: null };
+
+  // -------- question pools (mix per session) --------
+  const QUESTION_POOLS = {
+    phil: [
+      { title: 'Что для тебя сейчас в приоритете?', opts: [
+          ['protect', '🛡️', 'Защитить капитал от fiat collapse'],
+          ['stack',   '🪙', 'Накопить hard assets (silver / gold-backed)'],
+          ['yield',   '📈', 'Получать стабильный доход через стейкинг'] ] },
+      { title: 'Какой риск ты оцениваешь сейчас выше всего?', opts: [
+          ['hyper', '🔥', 'Гиперинфляция доллара'],
+          ['bank',  '🏦', 'Банковский крах / freeze счетов'],
+          ['cbdc',  '👁️', 'Введение CBDC и тотальный контроль'] ] },
+      { title: 'Куда бы переложил $10k завтра?', opts: [
+          ['metal',    '🥈', 'Silver / Gold (физика)'],
+          ['boostyfi', '⚡', 'ATLA / JGGL аллокация'],
+          ['cash',     '💼', 'Удержать в кеше — жду точку входа'] ] },
+      { title: 'За каким сигналом следишь плотнее всего?', opts: [
+          ['fed', '🏛️', 'Fed policy и ставка'],
+          ['dxy', '📊', 'DXY и индекс доллара'],
+          ['qfs', '💎', 'QFS / NESARA / Reset новости'] ] },
+      { title: 'Что важнее в hard-asset портфеле?', opts: [
+          ['phys',  '🪨', 'Физический металл в руках'],
+          ['token', '🔗', 'Tokenized asset с ликвидностью'],
+          ['mix',   '⚖️', 'Гибрид 50/50'] ] },
+    ],
+    brad: [
+      { title: 'К чему сейчас готовишься в первую очередь?', opts: [
+          ['event',  '⚡', 'The Event и EBS'],
+          ['gesara', '💎', 'GESARA / QFS transition'],
+          ['wait',   '🧘', 'Спокойный wait, держу позиции'] ] },
+      { title: 'Какой intel за неделю отозвался больше всего?', opts: [
+          ['military', '🎖️', 'Military ops / White Hats'],
+          ['election', '🗳️', 'Election integrity'],
+          ['ebs',      '📡', 'EBS readiness и сигналы'] ] },
+      { title: 'В чём твоя главная защита сейчас?', opts: [
+          ['faith',  '✝️', 'Faith и духовная подготовка'],
+          ['assets', '🛡️', 'Hard assets и крипто'],
+          ['comm',   '🤝', 'Community патриотов'] ] },
+      { title: 'На какой timeline ты ставишь?', opts: [
+          ['days',   '⏱️', 'Дни — события на пороге'],
+          ['weeks',  '📅', 'Недели'],
+          ['months', '🗓️', 'Месяцы — год сценария'] ] },
+      { title: 'Что важнее для портфеля сейчас?', opts: [
+          ['alloc',   '📥', 'Аллокация до Reset'],
+          ['staking', '🪙', 'Стейкинг и пассив'],
+          ['cash',    '💼', 'Кеш под нужный момент'] ] },
+    ],
+    none: [
+      { title: 'Что для тебя важнее всего на платформе?', opts: [
+          ['safe',   '🛡️', 'Безопасность капитала'],
+          ['grow',   '📈', 'Рост и доходность'],
+          ['simple', '✨', 'Простота и понятный интерфейс'] ] },
+      { title: 'Какую функцию ты ждёшь больше всего?', opts: [
+          ['app',  '📱', 'Мобильное приложение'],
+          ['auto', '🤖', 'Auto-stake / авто-реинвест'],
+          ['nft',  '🎨', 'NFT-маркет для сертификатов'] ] },
+      { title: 'Что бы добавил в личный кабинет?', opts: [
+          ['chart',   '📊', 'График портфеля по дням'],
+          ['history', '📜', 'Полную историю покупок'],
+          ['alerts',  '🔔', 'Уведомления о ценах'] ] },
+      { title: 'Какой токен интересует следующим?', opts: [
+          ['atla', '◆', 'ATLA — флагман'],
+          ['teki', '💠', 'TEKI — арт и роялти'],
+          ['imba', '🔥', 'IMBA — Brad-аллокация'] ] },
+      { title: 'Какой формат оплаты удобнее?', opts: [
+          ['card',   '💳', 'Банковская карта'],
+          ['crypto', '🪙', 'Crypto (USDT, BTC, ETH)'],
+          ['wire',   '🏦', 'Bank transfer / SWIFT'] ] },
+    ],
+    whale: [
+      { title: 'Что для вас сейчас в приоритете в портфеле?', opts: [
+          ['protect', '🛡️', 'Защита крупной позиции'],
+          ['yield',   '💰', 'Максимизация доходности'],
+          ['private', '🔒', 'Закрытые / private аллокации'] ] },
+      { title: 'Какой формат коммуникации удобнее?', opts: [
+          ['tg',    '✈️', 'Telegram с персональным менеджером'],
+          ['email', '📧', 'Email-дайджест раз в неделю'],
+          ['call',  '📞', 'Звонок 1 раз в месяц'] ] },
+      { title: 'Что важнее в private allocation?', opts: [
+          ['excl',  '💎', 'Эксклюзивность доступа'],
+          ['speed', '⚡', 'Скорость оформления'],
+          ['tax',   '📋', 'Налоговая и юридическая структура'] ] },
+      { title: 'Какой объём готовы расширить в следующем квартале?', opts: [
+          ['100', '◆', '+$100k'],
+          ['500', '◆◆', '+$500k'],
+          ['1m',  '◆◆◆', '+$1M'],
+          ['mgr', '✦', 'Решу с менеджером'] ] },
+      { title: 'Какие проекты хотели бы увидеть следующими?', opts: [
+          ['re',     '🏠', 'Real estate tokenization'],
+          ['commod', '🛢️', 'Commodities (нефть / металлы)'],
+          ['tech',   '🚀', 'Tech equity / pre-IPO'] ] },
+    ],
+  };
+
+  // -------- stat pools (rotated each session) --------
+  const STAT_POOLS = [
+    {
+      label: 'JGGL прорвал ATH',
+      rows: [
+        { ico:'⚡', label:'JGGL · цена',    val:'$2.14',  delta:'▲ +547%',  period:'за 6 месяцев',     color:'up'   },
+        { ico:'◆', label:'ATLA · цена',    val:'$213',   delta:'▲ +312%',  period:'с листинга',       color:'up'   },
+        { ico:'💎', label:'Стейкинг APY',  val:'38.4%',  delta:'▲ +6.2%',  period:'к прошлому месяцу',color:'gold' },
+        { ico:'👥', label:'Сообщество',    val:'27 408', delta:'▲ +1 240', period:'за неделю',        color:'blue' },
+      ],
+      hi: { pct:'+547%', text:'JGGL — топ-перформер платформы. Следующий апдейт стейкинга через 5 дней.' },
+    },
+    {
+      label: 'Квартал на закрытии',
+      rows: [
+        { ico:'🔥', label:'Объём за неделю', val:'$3.2M',  delta:'▲ +89%',  period:'к прошлой',       color:'up'   },
+        { ico:'💎', label:'Toon Certs',     val:'1 247',  delta:'▲ +340',  period:'выпущено за месяц',color:'gold' },
+        { ico:'⚡', label:'JGGL · цена',    val:'$2.14',  delta:'▲ +547%', period:'за 6 месяцев',    color:'up'   },
+        { ico:'🏆', label:'Топ-стейкер',    val:'$184k',  delta:'награда', period:'квартала',         color:'gold' },
+      ],
+      hi: { pct:'Q4', text:'Финальный месяц для quarterly bonuses — позиции фиксируются 30 числа.' },
+    },
+    {
+      label: 'TEKI вышел в топ-3',
+      rows: [
+        { ico:'◆', label:'ATLA · цена',     val:'$213',  delta:'▲ +312%', period:'с листинга',     color:'up'   },
+        { ico:'🪙', label:'Total staked',   val:'$8.4M', delta:'▲ +22%',  period:'за 30 дней',     color:'up'   },
+        { ico:'🚀', label:'Новых юзеров',   val:'+4 280',delta:'▲ +18%',  period:'за неделю',      color:'blue' },
+        { ico:'🎨', label:'TEKI mints',     val:'612',   delta:'▲ +91',   period:'за 7 дней',      color:'gold' },
+      ],
+      hi: { pct:'NEW', text:'TEKI вышел в топ-3 платформы. Идёт листинг на новой бирже — окно входа открыто.' },
+    },
+    {
+      label: 'Whale-движение в стейкинге',
+      rows: [
+        { ico:'🐋', label:'Whale stakes',   val:'$2.1M', delta:'▲ +$640k',period:'за 7 дней',      color:'up'   },
+        { ico:'💎', label:'Avg pack',       val:'$1 480',delta:'▲ +12%',  period:'к прошлой неделе',color:'gold'},
+        { ico:'⚡', label:'JGGL · цена',    val:'$2.14', delta:'▲ +547%', period:'за 6 месяцев',   color:'up'   },
+        { ico:'📡', label:'Реф-активация',  val:'+38%',  delta:'▲ +6%',   period:'за месяц',       color:'blue' },
+      ],
+      hi: { pct:'+$640k', text:'Крупные холдеры заходят в стейкинг — паттерн ровно как перед последним пампом.' },
+    },
+  ];
+
+  function pickPoll(s, tier) {
+    const key = tier === 'whale' ? 'whale' : s.streamer;
+    const pool = QUESTION_POOLS[key] || QUESTION_POOLS.none;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+  function pickStats() {
+    return STAT_POOLS[Math.floor(Math.random() * STAT_POOLS.length)];
+  }
 
   // -------- creatives (SVG) --------
   function paletteFor(kind, streamer, tier) {
@@ -640,6 +908,8 @@
   // -------- shared open/close --------
   function openStack() {
     state.idx = 0;
+    state.poll = pickPoll(segment(), tierOf($('seg-volume').value));
+    state.stats = pickStats();
     renderCard();
     backdrop.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -685,49 +955,37 @@
   function renderOpinion() {
     const s = segment();
     const tier = tierOf(s.volume);
+    if (!state.poll) state.poll = pickPoll(s, tier);
+    const poll = state.poll;
+
     const head = tier === 'whale'
-      ? `${s.name}, ваше мнение для нас важно`
+      ? `${s.name}, ваше мнение формирует roadmap`
       : narr(s.streamer, {
-          phil: 'Что для тебя важнее всего сейчас?',
-          brad: 'Какие сигналы ты ловишь?',
-          none: 'Помоги нам понять что улучшить',
+          phil: 'Твой ответ — наш следующий шаг',
+          brad: 'Мы читаем каждый ответ',
+          none: 'Помоги нам стать лучше',
         });
-    const title = tier === 'whale'
-      ? `Что для вас сейчас в приоритете в портфеле?`
-      : narr(s.streamer, {
-          phil: 'Что для тебя сейчас в приоритете?',
-          brad: 'К чему ты сейчас готовишься?',
-          none: 'Что тебе сейчас важнее всего на платформе?',
-        });
-    const opts = narr(s.streamer, {
-      phil: [
-        ['protect', 'Защитить капитал от fiat collapse'],
-        ['stack',   'Накопить hard assets (silver/gold-backed)'],
-        ['yield',   'Получать стабильный доход'],
-      ],
-      brad: [
-        ['ready',   'Быть готовым к The Event'],
-        ['intel',   'Получать качественный intel и аналитику'],
-        ['stack',   'Войти в правильную аллокацию до Reset'],
-      ],
-      none: [
-        ['protect', 'Безопасность капитала'],
-        ['grow',    'Рост и доходность'],
-        ['simple',  'Простота и понятный интерфейс'],
-      ],
-    });
+    const badge = tier === 'whale'
+      ? `<div class="m-badge"><span class="pulse"></span> Private survey</div>`
+      : `<div class="m-badge"><span class="pulse"></span> ${randCount(8000, 14000)} уже ответили</div>`;
 
     modal.innerHTML = `
       <button class="m-close" data-close>✕</button>
       ${pagerHtml(0)}
       ${creative('opinion', s.streamer, tier, head)}
+      ${badge}
       <div class="m-body">
         <div class="m-card-tag">Карточка 1 из 3 · мы слушаем</div>
-        <div class="m-title">${title}</div>
+        <div class="m-title">${poll.title}</div>
         <div class="m-sub">2–3 секунды — анонимно. Это влияет на то, что мы выкатим следующим релизом.</div>
       </div>
       <div class="m-options">
-        ${opts.map(([v, l]) => `<label class="opt" data-val="${v}"><span class="dot-r"></span> ${l}</label>`).join('')}
+        ${poll.opts.map(([v, e, l]) => `
+          <label class="opt" data-val="${v}">
+            <span class="opt-emoji">${e}</span>
+            <span class="opt-text">${l}</span>
+            <span class="opt-check">✓</span>
+          </label>`).join('')}
       </div>
       <textarea class="m-textarea" id="op-msg" placeholder="Свой вариант или комментарий (по желанию)…"></textarea>
       <div class="m-foot">
@@ -736,18 +994,24 @@
       </div>`;
     let pick = null;
     bindOptions(v => { pick = v; $('op-submit').disabled = false; });
-    // also enable if textarea filled
     $('op-msg').addEventListener('input', () => {
       $('op-submit').disabled = !($('op-msg').value.trim() || pick);
     });
     $('op-submit').addEventListener('click', () => nextCard('Спасибо! Ответ записан.'));
     bindClose(false);
   }
+  function randCount(min, max) {
+    const n = Math.floor(min + Math.random() * (max - min));
+    return n.toLocaleString('ru-RU');
+  }
 
   // -------- CARD 2: info / stats --------
   function renderInfo() {
     const s = segment();
     const tier = tierOf(s.volume);
+    if (!state.stats) state.stats = pickStats();
+    const set = state.stats;
+
     const portfolioGrowth = tier === 'whale' ? '+412%'
                           : tier === 'high'  ? '+287%'
                           : tier === 'mid'   ? '+164%'
@@ -771,42 +1035,29 @@
           <span>${s.name}, ваш совокупный портфель ${portfolioUsd} · ${portfolioGrowth} с момента входа</span>
         </div>` : '';
 
+    const statsHtml = set.rows.map(r => `
+      <div class="stat ${r.color}">
+        <span class="stat-ico">${r.ico}</span>
+        <div class="label">${r.label}</div>
+        <div class="val">${r.val}</div>
+        <div class="delta up">${r.delta}<span class="period">${r.period}</span></div>
+        ${spark(true)}
+      </div>`).join('');
+
     modal.innerHTML = `
       <button class="m-close" data-close>✕</button>
       ${pagerHtml(1)}
       ${creative('info', s.streamer, tier, head)}
+      <div class="m-badge"><span class="pulse"></span> ${set.label}</div>
       <div class="m-body">
         <div class="m-card-tag">Карточка 2 из 3 · что нового</div>
-        <div class="m-title">Цифры по проектам, в которые ты вошёл</div>
+        <div class="m-title">Цифры по проектам платформы</div>
       </div>
       ${personalRow}
-      <div class="stat-grid">
-        <div class="stat">
-          <div class="label">JGGL · цена</div>
-          <div class="val">$2.14</div>
-          <div class="up">▲ +547% за 6 месяцев</div>
-          ${spark(true)}
-        </div>
-        <div class="stat">
-          <div class="label">ATLA · цена</div>
-          <div class="val">$213</div>
-          <div class="up">▲ +312% с листинга</div>
-          ${spark(true)}
-        </div>
-        <div class="stat">
-          <div class="label">Стейкинг APY</div>
-          <div class="val">38.4%</div>
-          <div class="up">▲ +6.2% к прошлому месяцу</div>
-        </div>
-        <div class="stat">
-          <div class="label">Сообщество</div>
-          <div class="val">27 408</div>
-          <div class="up">▲ +1 240 за неделю</div>
-        </div>
-      </div>
+      <div class="stat-grid">${statsHtml}</div>
       <div class="info-row">
-        <span class="pct">+547%</span>
-        <span>JGGL — топ-перформер на платформе. Следующий апдейт стейкинга — через 5 дней.</span>
+        <span class="pct">${set.hi.pct}</span>
+        <span>${set.hi.text}</span>
       </div>
       <div class="m-foot">
         <button class="btn-primary" id="info-next">Понятно, далее →</button>
@@ -1004,15 +1255,27 @@
   // -------- demo controls --------
   ['seg-streamer','seg-volume','seg-refs','seg-div','seg-name'].forEach(id => {
     $(id).addEventListener('change', () => {
+      if (id === 'seg-streamer' || id === 'seg-volume') {
+        state.poll = pickPoll(segment(), tierOf($('seg-volume').value));
+      }
       if (backdrop.classList.contains('open')) renderCard();
     });
     $(id).addEventListener('input', () => {
       if (backdrop.classList.contains('open') && id === 'seg-name') renderCard();
     });
   });
+  // shuffle button: re-roll pools without closing
+  // (clicking ↻ replay already re-rolls via openStack)
   $('btn-replay').addEventListener('click', () => {
     localStorage.removeItem('boostyfi_modal_done');
     openStack();
+  });
+  $('btn-shuffle').addEventListener('click', () => {
+    state.poll = pickPoll(segment(), tierOf($('seg-volume').value));
+    state.stats = pickStats();
+    if (backdrop.classList.contains('open')) renderCard();
+    const t = $('toast'); t.textContent = '🎲 Пул обновлён';
+    t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1500);
   });
   $('btn-reset').addEventListener('click', () => {
     localStorage.removeItem('boostyfi_modal_done');
