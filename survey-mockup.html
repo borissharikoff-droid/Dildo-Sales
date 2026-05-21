@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1280" />
+<title>Boostyfi · Personal Account · Upsell Survey Prototype</title>
+<style>
+  :root {
+    --bg-0: #0b0b0e;
+    --bg-1: #1a0d10;
+    --accent: #ff5a1f;
+    --accent-2: #e8341a;
+    --ink: #15151a;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --card: #ffffff;
+    --soft: #f4f5f7;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Text",
+                 "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+  }
+  a { color: inherit; }
+
+  /* ============= Demo panel ============= */
+  .demo {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 200;
+    background: #111118; color: #e8e9ee;
+    border-bottom: 1px solid #222;
+    padding: 10px 16px;
+    display: flex; align-items: center; gap: 14px;
+    font-size: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.35);
+  }
+  .demo b { color: #ffb37a; letter-spacing: .04em; }
+  .demo label { display: flex; align-items: center; gap: 6px; }
+  .demo select {
+    background: #1c1c25; color: #e8e9ee;
+    border: 1px solid #2c2c38; border-radius: 8px;
+    padding: 4px 8px; font-size: 12px; min-width: 120px;
+  }
+  .demo .spacer { flex: 1; }
+  .demo button {
+    background: #2a2a36; color: #e8e9ee;
+    border: 1px solid #3a3a4a; border-radius: 8px;
+    padding: 6px 10px; cursor: pointer; font-size: 12px;
+  }
+  .demo button:hover { background: #34344a; }
+  .demo .pill {
+    padding: 3px 8px; border-radius: 999px;
+    background: #2a1810; color: #ffb37a;
+    border: 1px solid #543018; font-size: 11px;
+  }
+
+  /* ============= Boostyfi LK background ============= */
+  .lk { padding-top: 44px; }
+  .lk-hero {
+    position: relative;
+    background:
+      radial-gradient(120% 80% at 50% 0%, #2a0d12 0%, #160a0d 45%, #0b0b0e 80%);
+    color: #fff;
+    overflow: hidden;
+    border-bottom: 1px solid #1f1f24;
+  }
+  .lk-hero::before {
+    /* faux soundwave */
+    content: "";
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      90deg,
+      rgba(255,90,31,.18) 0 2px,
+      transparent 2px 8px
+    );
+    mask-image: radial-gradient(60% 60% at 50% 60%, #000 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(60% 60% at 50% 60%, #000 30%, transparent 80%);
+    opacity: .55;
+    pointer-events: none;
+  }
+  .lk-hero::after {
+    content: "";
+    position: absolute;
+    width: 360px; height: 360px;
+    right: 6%; top: 50%; transform: translateY(-50%);
+    background: radial-gradient(circle, rgba(232,52,26,.55) 0%, rgba(232,52,26,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .lk-nav {
+    position: relative;
+    z-index: 2;
+    display: flex; align-items: center; gap: 24px;
+    padding: 22px 40px;
+  }
+  .lk-logo { font-weight: 800; letter-spacing: .12em; }
+  .lk-token-pill {
+    margin-left: 32px;
+    background: linear-gradient(90deg, #ff5a1f, #e8341a);
+    color: #fff; font-weight: 700;
+    padding: 6px 14px; border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .lk-token-pill .sup { background: #fff; color: #e8341a; border-radius: 999px; font-size: 10px; padding: 1px 5px; font-weight: 800; }
+  .lk-menu { display: flex; gap: 22px; color: #ddd; font-size: 14px; }
+  .lk-menu a { opacity: .9; cursor: pointer; }
+  .lk-right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+  .lk-pill {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    color: #fff; padding: 6px 12px; border-radius: 999px;
+    font-size: 13px;
+  }
+  .lk-back { padding: 24px 40px 0; color: #ddd; opacity: .8; font-size: 13px; cursor: pointer; position: relative; z-index: 2; }
+  .lk-title {
+    padding: 8px 40px 60px;
+    font-size: 56px; font-weight: 800; letter-spacing: -.02em;
+    position: relative; z-index: 2;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .lk-title .faq {
+    background: #fff; color: #111;
+    font-size: 14px; padding: 6px 12px; border-radius: 12px;
+    font-weight: 600; display: inline-flex; align-items: center; gap: 6px;
+  }
+
+  /* ============= LK body ============= */
+  .lk-body {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 40px;
+    padding: 36px 40px 80px;
+    background: #fff;
+  }
+  .lk-side { display: flex; flex-direction: column; gap: 18px; padding-top: 10px; }
+  .lk-side .item {
+    font-size: 22px; font-weight: 600; color: #111;
+    padding: 6px 0; cursor: pointer;
+  }
+  .lk-side .item.active { border-bottom: 2px solid #111; width: max-content; }
+  .lk-side .item.muted { color: #9ca0a8; font-weight: 500; }
+
+  .lk-h2 { font-size: 22px; font-weight: 700; margin: 0 0 14px; }
+  .lk-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin-bottom: 32px;
+  }
+  .bal {
+    border: 1px solid var(--line); border-radius: 16px;
+    padding: 18px 20px; background: #fff;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .bal-top { display: flex; align-items: center; gap: 10px; }
+  .bal-top .ico {
+    width: 28px; height: 28px; border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 800; color: #fff; font-size: 12px;
+  }
+  .ico.atla { background: #111; }
+  .ico.jggl { background: linear-gradient(135deg, #ff8a3d, #ff5a1f); }
+  .ico.teki { background: linear-gradient(135deg, #6ec1f7, #a07cf0); }
+  .ico.imba { background: linear-gradient(135deg, #ff2d55, #d10039); }
+  .bal-name { color: #6b7280; font-weight: 500; }
+  .bal-actions { margin-left: auto; display: flex; gap: 8px; }
+  .ghost {
+    background: #f4f5f7; color: #111; border: none;
+    padding: 7px 12px; border-radius: 10px; cursor: pointer; font-size: 13px;
+  }
+  .ghost:hover { background: #ececf0; }
+  .bal-amount { font-size: 22px; font-weight: 700; }
+  .bal-amount small { color: #9ca0a8; font-weight: 500; margin-left: 8px; }
+
+  /* ============= Skip toast ============= */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: #111118; color: #fff; padding: 12px 18px;
+    border-radius: 12px; font-size: 14px; z-index: 300;
+    box-shadow: 0 12px 40px rgba(0,0,0,.4);
+    display: none;
+  }
+  .toast.show { display: block; animation: pop .25s ease-out; }
+  @keyframes pop { from { transform: translate(-50%, 8px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+
+  /* ============= Modal ============= */
+  .backdrop {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(8, 8, 12, .72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 40px 16px;
+  }
+  .backdrop.open { display: flex; }
+  .modal {
+    background: #fff; border-radius: 20px;
+    width: 560px; max-width: 100%;
+    box-shadow: 0 30px 80px rgba(0,0,0,.5);
+    overflow: hidden;
+    position: relative;
+    animation: rise .35s ease-out;
+  }
+  @keyframes rise { from { transform: translateY(16px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  /* Step header */
+  .m-head {
+    padding: 22px 28px 0;
+  }
+  .m-progress {
+    height: 6px; background: #f0f1f4; border-radius: 999px; overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .m-progress > span {
+    display: block; height: 100%;
+    background: linear-gradient(90deg, #ff8a3d, #e8341a);
+    width: 50%; transition: width .35s ease;
+  }
+  .m-step-label {
+    font-size: 12px; letter-spacing: .12em; color: #9ca0a8;
+    text-transform: uppercase; font-weight: 700;
+  }
+  .m-title {
+    font-size: 22px; font-weight: 700; margin: 8px 0 4px;
+    line-height: 1.25;
+  }
+  .m-sub { color: #6b7280; font-size: 14px; margin-bottom: 18px; }
+
+  .m-options { padding: 4px 28px 8px; display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    border: 1.5px solid var(--line); border-radius: 14px;
+    padding: 14px 16px; cursor: pointer;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 15px; font-weight: 500;
+    transition: border-color .15s, background .15s;
+  }
+  .opt:hover { border-color: #c8c9d0; background: #fafafb; }
+  .opt .dot {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid #c8c9d0; flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .opt.selected { border-color: var(--accent); background: #fff6f0; }
+  .opt.selected .dot { border-color: var(--accent); }
+  .opt.selected .dot::after {
+    content: ""; width: 9px; height: 9px; border-radius: 50%;
+    background: var(--accent);
+  }
+  .opt-custom {
+    display: flex; gap: 10px; align-items: center;
+    border: 1.5px dashed #d3d4db; border-radius: 14px;
+    padding: 10px 12px;
+  }
+  .opt-custom input {
+    flex: 1; border: none; outline: none; font-size: 15px;
+    background: transparent;
+  }
+
+  .m-foot {
+    padding: 18px 28px 22px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .btn-primary {
+    background: linear-gradient(90deg, #ff8a3d, #e8341a);
+    color: #fff; border: none; border-radius: 12px;
+    padding: 14px 22px; font-size: 15px; font-weight: 700;
+    cursor: pointer; flex: 1;
+    box-shadow: 0 6px 18px rgba(232,52,26,.35);
+  }
+  .btn-primary:disabled {
+    background: #e7e8ec; color: #a3a6ae; cursor: not-allowed; box-shadow: none;
+  }
+  .btn-link {
+    background: transparent; color: #9ca0a8; border: none;
+    font-size: 12px; cursor: pointer; text-decoration: underline;
+  }
+  .btn-link:hover { color: #6b7280; }
+
+  /* Offer card */
+  .offer { padding: 22px 28px 24px; }
+  .offer-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #fff1ea; color: #d63a0b;
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 12px; font-weight: 700; letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .offer-title {
+    font-size: 24px; font-weight: 800; line-height: 1.2;
+    margin: 12px 0 4px;
+  }
+  .offer-product {
+    color: #6b7280; font-size: 14px; margin-bottom: 18px;
+  }
+  .offer-pricerow {
+    display: flex; align-items: baseline; gap: 12px;
+    margin-bottom: 6px;
+  }
+  .offer-new { font-size: 34px; font-weight: 800; color: #111; }
+  .offer-old {
+    text-decoration: line-through; color: #9ca0a8; font-size: 18px;
+  }
+  .offer-save {
+    background: #ecfdf3; color: #027a48;
+    font-size: 12px; font-weight: 700;
+    padding: 3px 10px; border-radius: 999px;
+  }
+  .offer-bonus {
+    background: #fff6f0; border: 1px dashed #ffb37a;
+    color: #b8410d; border-radius: 12px;
+    padding: 10px 14px; margin: 14px 0;
+    font-size: 14px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .offer-bonus .star { font-size: 16px; }
+
+  .offer-timer {
+    display: flex; align-items: center; gap: 10px;
+    background: #fff5f4; border: 1px solid #f6c9c1;
+    border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;
+    font-size: 14px; color: #b91c1c; font-weight: 600;
+  }
+  .offer-timer .clock {
+    font-variant-numeric: tabular-nums;
+    font-weight: 800; font-size: 18px;
+    background: #b91c1c; color: #fff; padding: 4px 10px; border-radius: 8px;
+  }
+  .offer-social {
+    display: flex; align-items: center; gap: 10px;
+    color: #6b7280; font-size: 13px; margin-bottom: 18px;
+  }
+  .avatars { display: inline-flex; }
+  .avatars span {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid #fff; display: inline-block;
+    margin-left: -6px;
+  }
+  .avatars span:first-child { margin-left: 0; }
+  .a1 { background: linear-gradient(135deg,#ffd29a,#ff8a3d); }
+  .a2 { background: linear-gradient(135deg,#a3d8ff,#5e8df0); }
+  .a3 { background: linear-gradient(135deg,#ffb1b1,#ff2d55); }
+  .a4 { background: linear-gradient(135deg,#c5f3c0,#3aa55c); }
+
+  .offer-cta { display: flex; flex-direction: column; gap: 8px; }
+  .offer-cta .btn-primary { flex: none; }
+  .offer-cta .btn-lose {
+    background: transparent; border: none;
+    color: #9ca0a8; font-size: 12px; cursor: pointer;
+    text-decoration: underline;
+  }
+  .offer-cta .btn-lose:hover { color: #6b7280; }
+
+  /* Final thank-you */
+  .thanks { padding: 32px 28px; text-align: center; }
+  .thanks h3 { margin: 0 0 8px; font-size: 22px; }
+  .thanks p { color: #6b7280; margin: 0 0 18px; }
+
+  /* utility */
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- Demo panel -->
+<div class="demo" role="region" aria-label="Demo controls">
+  <b>DEMO ·</b>
+  <span class="pill">сегмент пользователя</span>
+  <label>Стример
+    <select id="seg-streamer">
+      <option value="none">Нет</option>
+      <option value="phil" selected>Phil</option>
+      <option value="brad">Brad</option>
+    </select>
+  </label>
+  <label>Объём
+    <select id="seg-volume">
+      <option value="5k" selected>до $5k</option>
+      <option value="25k">до $25k</option>
+      <option value="50k">до $50k</option>
+      <option value="50k+">$50k+</option>
+    </select>
+  </label>
+  <label>Рефералы
+    <select id="seg-refs">
+      <option value="lt5" selected>до 5</option>
+      <option value="lt20">до 20</option>
+      <option value="gt20">20+</option>
+    </select>
+  </label>
+  <label>Диверсификация
+    <select id="seg-div">
+      <option value="bits">по чуть-чуть</option>
+      <option value="one" selected>1 продукт</option>
+      <option value="two">2 продукта</option>
+      <option value="all-but-one">все, кроме 1</option>
+    </select>
+  </label>
+  <span class="spacer"></span>
+  <button id="btn-replay">↻ Запустить опрос</button>
+  <button id="btn-reset">Сбросить демо</button>
+</div>
+
+<!-- LK mock -->
+<section class="lk">
+  <div class="lk-hero">
+    <div class="lk-nav">
+      <div class="lk-logo">◇ BOOSTYFI</div>
+      <div class="lk-token-pill">JGGL <span class="sup">2</span> ▾</div>
+      <nav class="lk-menu">
+        <a>Token</a><a>Roadmap</a><a>Artists</a><a>News</a>
+      </nav>
+      <div class="lk-right">
+        <span class="lk-pill">🇺🇸 ENG</span>
+        <span class="lk-pill">drbor… ▾</span>
+      </div>
+    </div>
+    <div class="lk-back">‹ Back</div>
+    <h1 class="lk-title">Personal Account <span class="faq">? FAQ</span></h1>
+  </div>
+
+  <div class="lk-body">
+    <aside class="lk-side">
+      <div class="item active">Balance</div>
+      <div class="item muted">Installments</div>
+      <div class="item muted">Referral</div>
+      <div class="item muted">Claim</div>
+    </aside>
+    <main>
+      <h2 class="lk-h2">Token Balance</h2>
+      <div class="lk-grid">
+        <div class="bal">
+          <div class="bal-top">
+            <span class="ico atla">A</span>
+            <span class="bal-name">ATLA Balance</span>
+            <span class="bal-actions">
+              <button class="ghost">My packs &amp; certificates</button>
+              <button class="ghost">Staking</button>
+            </span>
+          </div>
+          <div class="bal-amount">1.00 ATLA <small>| $213</small></div>
+        </div>
+        <div class="bal">
+          <div class="bal-top">
+            <span class="ico jggl">J</span>
+            <span class="bal-name">JGGL Balance</span>
+            <span class="bal-actions">
+              <button class="ghost">My packs &amp; certificates</button>
+              <button class="ghost">Staking</button>
+            </span>
+          </div>
+          <div class="bal-amount">0.00 JGGL <small>| $0</small></div>
+        </div>
+        <div class="bal">
+          <div class="bal-top">
+            <span class="ico teki">T</span>
+            <span class="bal-name">TEKI Balance</span>
+            <span class="bal-actions">
+              <button class="ghost">My packs &amp; certificates</button>
+              <button class="ghost">Staking</button>
+              <button class="ghost">Buy now</button>
+            </span>
+          </div>
+          <div class="bal-amount">0.00 TEKI <small>| $0</small></div>
+        </div>
+        <div class="bal">
+          <div class="bal-top">
+            <span class="ico imba">I</span>
+            <span class="bal-name">IMBA Balance</span>
+            <span class="bal-actions">
+              <button class="ghost">My packs &amp; certificates</button>
+              <button class="ghost">Buy now</button>
+            </span>
+          </div>
+          <div class="bal-amount">0.00 IMBA <small>| $0</small></div>
+        </div>
+      </div>
+      <h2 class="lk-h2">Toon Property Certificates Balance</h2>
+      <div class="bal">
+        <div class="bal-top">
+          <span class="ico" style="background:#222;">▦</span>
+          <span class="bal-name">Toon Property Certificates Balance</span>
+          <span class="bal-actions">
+            <button class="ghost">My packs &amp; certificates</button>
+          </span>
+        </div>
+        <div class="bal-amount">0 <small>certificates</small></div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- Skip toast -->
+<div id="toast" class="toast">Покажем при следующем входе ⏰</div>
+
+<!-- Modal -->
+<div id="backdrop" class="backdrop" role="dialog" aria-modal="true" aria-labelledby="m-title">
+  <div class="modal">
+
+    <!-- STEP 1 -->
+    <div id="step-1">
+      <div class="m-head">
+        <div class="m-progress"><span style="width:50%"></span></div>
+        <div class="m-step-label">Шаг 1 из 2 · 30 секунд</div>
+        <div class="m-title" id="m-title">Какая цель у твоей ближайшей покупки?</div>
+        <div class="m-sub">Подберём персональный оффер под твою стратегию. За прохождение — бонус-токены.</div>
+      </div>
+      <div class="m-options" data-step="1">
+        <label class="opt" data-val="growth"><span class="dot"></span> Хочу быстрее разогнать портфель</label>
+        <label class="opt" data-val="passive"><span class="dot"></span> Стабильный пассивный доход через стейкинг</label>
+        <label class="opt" data-val="diversify"><span class="dot"></span> Диверсифицировать — добавить новый проект</label>
+        <div class="opt-custom">
+          <span class="dot" style="border:2px solid #c8c9d0; width:18px;height:18px;border-radius:50%;display:inline-block"></span>
+          <input type="text" placeholder="Свой вариант…" data-custom="1" />
+        </div>
+      </div>
+      <div class="m-foot">
+        <button class="btn-primary" id="next-1" disabled>Далее →</button>
+        <button class="btn-link" data-skip>Напомнить позже</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="step-2" class="hidden">
+      <div class="m-head">
+        <div class="m-progress"><span style="width:100%"></span></div>
+        <div class="m-step-label">Шаг 2 из 2 · почти готово</div>
+        <div class="m-title">Какой бюджет готов выделить на следующий шаг?</div>
+        <div class="m-sub">Это влияет только на размер пака и бонуса — никаких списаний.</div>
+      </div>
+      <div class="m-options" data-step="2">
+        <label class="opt" data-val="lt200"><span class="dot"></span> До $200</label>
+        <label class="opt" data-val="200-1000"><span class="dot"></span> $200 – $1 000</label>
+        <label class="opt" data-val="1000+"><span class="dot"></span> $1 000+</label>
+        <div class="opt-custom">
+          <span class="dot" style="border:2px solid #c8c9d0; width:18px;height:18px;border-radius:50%;display:inline-block"></span>
+          <input type="text" placeholder="Свой бюджет…" data-custom="2" />
+        </div>
+      </div>
+      <div class="m-foot">
+        <button class="btn-primary" id="next-2" disabled>Показать мой оффер →</button>
+        <button class="btn-link" data-skip>Напомнить позже</button>
+      </div>
+    </div>
+
+    <!-- OFFER -->
+    <div id="step-offer" class="hidden">
+      <div class="offer">
+        <span class="offer-badge">🔥 персональный оффер</span>
+        <div class="offer-title" id="o-title">Усиль ставку под Phil — добери JGGL ×2 пак</div>
+        <div class="offer-product" id="o-product">JGGL Booster Pack · 2× токена + закрытый Discord-канал</div>
+
+        <div class="offer-pricerow">
+          <span class="offer-new" id="o-new">$89</span>
+          <span class="offer-old" id="o-old">$129</span>
+          <span class="offer-save" id="o-save">−31%</span>
+        </div>
+
+        <div class="offer-bonus">
+          <span class="star">🎁</span>
+          <span><b id="o-bonus">+15%</b> бонусных токенов начислено за прохождение опроса</span>
+        </div>
+
+        <div class="offer-timer">
+          <span class="clock" id="o-clock">15:00</span>
+          <span>Оффер сгорит после таймера — без продления</span>
+        </div>
+
+        <div class="offer-social">
+          <span class="avatars">
+            <span class="a1"></span><span class="a2"></span><span class="a3"></span><span class="a4"></span>
+          </span>
+          <span><b id="o-social">237</b> инвесторов забрали этот оффер сегодня</span>
+        </div>
+
+        <div class="offer-cta">
+          <button class="btn-primary" id="take-offer">Забрать оффер →</button>
+          <button class="btn-lose" id="lose-offer">Отказаться (бонус сгорит)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- THANKS -->
+    <div id="step-thanks" class="hidden">
+      <div class="thanks">
+        <h3>Готово ✨</h3>
+        <p>Оффер закреплён в твоём ЛК на 24 часа. Ссылка ушла в Telegram.</p>
+        <button class="btn-primary" style="max-width:240px;margin:0 auto;" id="close-thanks">Вернуться в кабинет</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  // ---------- state ----------
+  const state = { step: 1, answer1: null, answer2: null };
+  const $ = (id) => document.getElementById(id);
+  const backdrop = $('backdrop');
+
+  // ---------- offer rules ----------
+  // segment: { streamer, volume, refs, div }
+  // returns: { title, product, oldPrice, newPrice, bonusPct, social }
+  function pickOffer(seg) {
+    const streamerLabel = { phil: 'Phil', brad: 'Brad', none: '' }[seg.streamer];
+
+    // Whales with huge volume
+    if (seg.volume === '50k+') {
+      if (seg.div === 'all-but-one') {
+        return {
+          title: 'Заверши коллекцию — последний токен по закрытой цене',
+          product: 'Closed-door allocation · IMBA Whale Slot + 1.0 ATLA в подарок',
+          oldPrice: 4900, newPrice: 3490, bonusPct: 20, social: 41,
+        };
+      }
+      if (seg.refs === 'lt5') {
+        return {
+          title: 'Активируй реф-программу с ×3 коэффициентом',
+          product: 'Whale Referral Boost · персональная ссылка + $500 в JGGL',
+          oldPrice: 1500, newPrice: 990, bonusPct: 25, social: 58,
+        };
+      }
+      return {
+        title: 'VIP-аллокация под ' + (streamerLabel || 'топ-стримера'),
+        product: 'Founders Pack · 5× ATLA + приватный звонок с командой',
+        oldPrice: 7800, newPrice: 5900, bonusPct: 18, social: 31,
+      };
+    }
+
+    // Mid volume
+    if (seg.volume === '25k' || seg.volume === '50k') {
+      if (seg.div === 'two' && streamerLabel === 'Brad') {
+        return {
+          title: 'Закрой портфель — последний слот под Brad',
+          product: 'IMBA Certificate · −22% и +10% бонусных IMBA',
+          oldPrice: 1290, newPrice: 990, bonusPct: 10, social: 142,
+        };
+      }
+      if (seg.div === 'one') {
+        return {
+          title: 'Добавь второй проект — диверсификация ×2',
+          product: 'Diversify Pack · TEKI + IMBA в одном паке',
+          oldPrice: 890, newPrice: 690, bonusPct: 12, social: 188,
+        };
+      }
+      if (seg.refs === 'gt20') {
+        return {
+          title: 'Реф-капитан: ×2 на следующую покупку',
+          product: 'Captain Pack · JGGL + бонусные реф-токены',
+          oldPrice: 1190, newPrice: 790, bonusPct: 18, social: 96,
+        };
+      }
+      return {
+        title: 'Усиль позицию под ' + (streamerLabel || 'свой проект'),
+        product: 'Mid Booster Pack · 1.5× к текущему балансу',
+        oldPrice: 690, newPrice: 490, bonusPct: 12, social: 174,
+      };
+    }
+
+    // Small volume (default $5k)
+    if (seg.div === 'bits') {
+      return {
+        title: 'Сфокусируйся на одном — собери Starter под ' + (streamerLabel || 'топ-стример'),
+        product: 'Focus Starter · ATLA + JGGL в одной точке входа',
+        oldPrice: 199, newPrice: 129, bonusPct: 15, social: 312,
+      };
+    }
+    if (seg.div === 'one' && streamerLabel === 'Phil') {
+      return {
+        title: 'Усиль ставку под Phil — добери JGGL ×2 пак',
+        product: 'JGGL Booster Pack · 2× токена + закрытый Discord-канал',
+        oldPrice: 129, newPrice: 89, bonusPct: 15, social: 237,
+      };
+    }
+    if (seg.div === 'one' && streamerLabel === 'Brad') {
+      return {
+        title: 'Удвой ставку под Brad — IMBA ×2 пак',
+        product: 'IMBA Booster Pack · 2× токена + ранний доступ к дропам',
+        oldPrice: 129, newPrice: 89, bonusPct: 15, social: 198,
+      };
+    }
+    if (seg.streamer === 'none' && seg.refs === 'gt20') {
+      return {
+        title: 'VIP-вход под топ-стримера с ×2 реф-бонусом',
+        product: 'Premiere Pack · войти под Phil или Brad, эксклюзив 24ч',
+        oldPrice: 249, newPrice: 169, bonusPct: 20, social: 84,
+      };
+    }
+    if (seg.streamer === 'none') {
+      return {
+        title: 'Выбери стримера и зайди со скидкой первого входа',
+        product: 'First-time Pack · Phil или Brad на выбор + welcome бонус',
+        oldPrice: 149, newPrice: 99, bonusPct: 12, social: 421,
+      };
+    }
+    // fallback
+    return {
+      title: 'Персональный пак под твой профиль',
+      product: 'Custom Pack · сбалансированный набор по твоим ответам',
+      oldPrice: 149, newPrice: 109, bonusPct: 10, social: 156,
+    };
+  }
+
+  function renderOffer() {
+    const seg = {
+      streamer: $('seg-streamer').value,
+      volume: $('seg-volume').value,
+      refs: $('seg-refs').value,
+      div: $('seg-div').value,
+    };
+    const o = pickOffer(seg);
+    $('o-title').textContent = o.title;
+    $('o-product').textContent = o.product;
+    $('o-new').textContent = '$' + o.newPrice.toLocaleString('en-US');
+    $('o-old').textContent = '$' + o.oldPrice.toLocaleString('en-US');
+    const save = Math.round((1 - o.newPrice / o.oldPrice) * 100);
+    $('o-save').textContent = '−' + save + '%';
+    $('o-bonus').textContent = '+' + o.bonusPct + '%';
+    $('o-social').textContent = o.social;
+  }
+
+  // ---------- modal open/close ----------
+  function openModal() {
+    backdrop.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    goStep(1);
+  }
+  function closeModal(showToast) {
+    backdrop.classList.remove('open');
+    document.body.style.overflow = '';
+    if (showToast) {
+      const t = $('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2400);
+    }
+  }
+
+  function goStep(s) {
+    state.step = s;
+    $('step-1').classList.toggle('hidden', s !== 1);
+    $('step-2').classList.toggle('hidden', s !== 2);
+    $('step-offer').classList.toggle('hidden', s !== 'offer');
+    $('step-thanks').classList.toggle('hidden', s !== 'thanks');
+    if (s === 'offer') { renderOffer(); startTimer(); }
+  }
+
+  // ---------- options selection ----------
+  document.querySelectorAll('.m-options').forEach(group => {
+    const step = group.dataset.step;
+    group.addEventListener('click', e => {
+      const opt = e.target.closest('.opt');
+      if (!opt) return;
+      group.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      const customInput = group.querySelector('input[data-custom]');
+      if (customInput) customInput.value = '';
+      setAnswer(step, opt.dataset.val);
+    });
+    const custom = group.querySelector('input[data-custom]');
+    if (custom) {
+      custom.addEventListener('input', () => {
+        group.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+        setAnswer(step, custom.value.trim() ? 'custom:' + custom.value.trim() : null);
+      });
+    }
+  });
+
+  function setAnswer(step, val) {
+    if (step === '1') { state.answer1 = val; $('next-1').disabled = !val; }
+    if (step === '2') { state.answer2 = val; $('next-2').disabled = !val; }
+  }
+
+  $('next-1').addEventListener('click', () => goStep(2));
+  $('next-2').addEventListener('click', () => goStep('offer'));
+
+  document.querySelectorAll('[data-skip]').forEach(b =>
+    b.addEventListener('click', () => closeModal(true))
+  );
+
+  // Esc + backdrop click = NO close (blocking modal)
+  backdrop.addEventListener('click', e => {
+    if (e.target === backdrop) {
+      const m = backdrop.querySelector('.modal');
+      m.animate(
+        [{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' },
+         { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }],
+        { duration: 220 }
+      );
+    }
+  });
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && backdrop.classList.contains('open')) e.preventDefault();
+  });
+
+  // ---------- timer ----------
+  let timerId = null;
+  function startTimer() {
+    if (timerId) clearInterval(timerId);
+    let t = 15 * 60;
+    const el = $('o-clock');
+    const tick = () => {
+      const m = String(Math.floor(t / 60)).padStart(2, '0');
+      const s = String(t % 60).padStart(2, '0');
+      el.textContent = m + ':' + s;
+      if (t-- <= 0) clearInterval(timerId);
+    };
+    tick();
+    timerId = setInterval(tick, 1000);
+  }
+
+  // ---------- offer actions ----------
+  $('take-offer').addEventListener('click', () => {
+    localStorage.setItem('boostyfi_survey_done', '1');
+    goStep('thanks');
+  });
+  $('lose-offer').addEventListener('click', () => {
+    localStorage.setItem('boostyfi_survey_done', '1');
+    closeModal(true);
+  });
+  $('close-thanks').addEventListener('click', () => closeModal(false));
+
+  // ---------- live re-render offer on segment change ----------
+  ['seg-streamer','seg-volume','seg-refs','seg-div'].forEach(id => {
+    $(id).addEventListener('change', () => {
+      if (state.step === 'offer') renderOffer();
+    });
+  });
+
+  // ---------- demo buttons ----------
+  $('btn-replay').addEventListener('click', () => {
+    localStorage.removeItem('boostyfi_survey_done');
+    state.answer1 = null; state.answer2 = null;
+    document.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+    document.querySelectorAll('input[data-custom]').forEach(i => i.value = '');
+    $('next-1').disabled = true; $('next-2').disabled = true;
+    openModal();
+  });
+  $('btn-reset').addEventListener('click', () => {
+    localStorage.removeItem('boostyfi_survey_done');
+    location.reload();
+  });
+
+  // ---------- auto-open ----------
+  if (!localStorage.getItem('boostyfi_survey_done')) {
+    setTimeout(openModal, 600);
+  }
+})();
+</script>
+
+</body>
+</html>
