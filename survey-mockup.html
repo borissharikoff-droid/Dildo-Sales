@@ -57,7 +57,7 @@
     border: 1px solid #543018; font-size: 11px;
   }
   .demo .pill.whale {
-    background: #14233a; color: #ffd97a; border-color: #2c4a78;
+    background: #000; color: #d4af37; border-color: #2a2a2a;
   }
   .demo .sep { width: 1px; height: 20px; background: #2c2c38; }
 
@@ -178,6 +178,13 @@
     box-shadow: 0 30px 80px rgba(0,0,0,.5);
     overflow: hidden; position: relative;
     animation: rise .35s ease-out;
+    transition: box-shadow .25s;
+  }
+  .modal.whale {
+    box-shadow:
+      0 30px 80px rgba(0,0,0,.75),
+      0 0 0 1px rgba(212, 175, 55, .25),
+      0 0 40px rgba(212, 175, 55, .08);
   }
   @keyframes rise { from { transform: translateY(16px); opacity: 0; } to { transform: none; opacity: 1; } }
 
@@ -327,6 +334,11 @@
     font-weight: 800; font-size: 18px; flex: 0 0 auto;
     position: relative;
   }
+  .mgr-ava.whale-ava {
+    background: linear-gradient(135deg, #1a1a1a, #000);
+    color: #d4af37;
+    border: 1px solid #d4af37;
+  }
   .mgr-ava::after {
     content: ""; position: absolute; bottom: 2px; right: 2px;
     width: 12px; height: 12px; border-radius: 50%;
@@ -381,8 +393,12 @@
     font-size: 13px; font-weight: 600;
     display: flex; align-items: center; gap: 10px;
   }
-  .vip-banner .crown {
-    font-size: 18px;
+  .vip-banner .crown { font-size: 18px; }
+  .vip-banner.whale-banner {
+    background: linear-gradient(90deg, #000, #1a1a1a);
+    color: #d4af37;
+    border: 1px solid #2a2a2a;
+    letter-spacing: .02em;
   }
 
   .hidden { display: none !important; }
@@ -541,7 +557,7 @@
   // -------- creatives (SVG) --------
   function paletteFor(kind, streamer, tier) {
     if (tier === 'whale') {
-      return { from: '#0e0e1a', to: '#332514', accent: '#ffd97a', tag: 'VIP · PRIVATE CHANNEL' };
+      return { from: '#000000', to: '#101010', accent: '#d4af37', tag: 'VIP · BLACK TIER' };
     }
     const byStreamer = {
       phil: { from: '#1a1f33', to: '#3b2a10', accent: '#d4a64a', tag: 'PHIL · HARD ASSETS' },
@@ -750,8 +766,8 @@
         });
 
     const personalRow = tier === 'whale' || tier === 'high'
-      ? `<div class="vip-banner">
-          <span class="crown">👑</span>
+      ? `<div class="vip-banner${tier === 'whale' ? ' whale-banner' : ''}">
+          <span class="crown">${tier === 'whale' ? '◆' : '👑'}</span>
           <span>${s.name}, ваш совокупный портфель ${portfolioUsd} · ${portfolioGrowth} с момента входа</span>
         </div>` : '';
 
@@ -829,9 +845,9 @@
       : `Привет! Меня заинтересовал оффер «${o.title}» (${o.product}). Готов обсудить детали и оформить.`;
 
     const vipRow = (tier === 'whale')
-      ? `<div class="vip-banner">
-          <span class="crown">👑</span>
-          <span>VIP · персональный менеджер ${mgr.name} · приоритетная очередь</span>
+      ? `<div class="vip-banner whale-banner">
+          <span class="crown">◆</span>
+          <span>BLACK TIER · персональный менеджер ${mgr.name} · приоритетная очередь</span>
         </div>` : '';
 
     modal.innerHTML = `
@@ -854,7 +870,7 @@
         </div>
       </div>
       <div class="mgr-card">
-        <div class="mgr-ava">${mgr.name[0]}</div>
+        <div class="mgr-ava${tier === 'whale' ? ' whale-ava' : ''}">${mgr.name[0]}</div>
         <div class="mgr-info">
           <div class="name">${mgr.name}</div>
           <div class="role">${mgr.role}</div>
@@ -964,6 +980,8 @@
 
   // -------- dispatcher --------
   function renderCard() {
+    const tier = tierOf($('seg-volume').value);
+    modal.classList.toggle('whale', tier === 'whale');
     if (state.idx === 0) renderOpinion();
     else if (state.idx === 1) renderInfo();
     else renderSales();
