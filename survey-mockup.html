@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=1280" />
-<title>Boostyfi · Personal Account · Upsell Survey Prototype</title>
+<title>Boostyfi · LK · Modals Prototype</title>
 <style>
   :root {
     --bg-0: #0b0b0e;
@@ -13,8 +13,6 @@
     --ink: #15151a;
     --muted: #6b7280;
     --line: #e5e7eb;
-    --card: #ffffff;
-    --soft: #f4f5f7;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -33,16 +31,17 @@
     background: #111118; color: #e8e9ee;
     border-bottom: 1px solid #222;
     padding: 10px 16px;
-    display: flex; align-items: center; gap: 14px;
+    display: flex; align-items: center; gap: 12px;
     font-size: 12px;
     box-shadow: 0 4px 18px rgba(0,0,0,.35);
+    flex-wrap: wrap;
   }
   .demo b { color: #ffb37a; letter-spacing: .04em; }
   .demo label { display: flex; align-items: center; gap: 6px; }
   .demo select {
     background: #1c1c25; color: #e8e9ee;
     border: 1px solid #2c2c38; border-radius: 8px;
-    padding: 4px 8px; font-size: 12px; min-width: 120px;
+    padding: 4px 8px; font-size: 12px; min-width: 110px;
   }
   .demo .spacer { flex: 1; }
   .demo button {
@@ -51,14 +50,19 @@
     padding: 6px 10px; cursor: pointer; font-size: 12px;
   }
   .demo button:hover { background: #34344a; }
+  .demo button.primary {
+    background: linear-gradient(90deg, #ff8a3d, #e8341a);
+    border-color: transparent; color: #fff; font-weight: 600;
+  }
   .demo .pill {
     padding: 3px 8px; border-radius: 999px;
     background: #2a1810; color: #ffb37a;
     border: 1px solid #543018; font-size: 11px;
   }
+  .demo .sep { width: 1px; height: 20px; background: #2c2c38; }
 
   /* ============= Boostyfi LK background ============= */
-  .lk { padding-top: 44px; }
+  .lk { padding-top: 90px; }
   .lk-hero {
     position: relative;
     background:
@@ -68,13 +72,10 @@
     border-bottom: 1px solid #1f1f24;
   }
   .lk-hero::before {
-    /* faux soundwave */
     content: "";
     position: absolute; inset: 0;
     background-image: repeating-linear-gradient(
-      90deg,
-      rgba(255,90,31,.18) 0 2px,
-      transparent 2px 8px
+      90deg, rgba(255,90,31,.18) 0 2px, transparent 2px 8px
     );
     mask-image: radial-gradient(60% 60% at 50% 60%, #000 30%, transparent 80%);
     -webkit-mask-image: radial-gradient(60% 60% at 50% 60%, #000 30%, transparent 80%);
@@ -91,8 +92,7 @@
     pointer-events: none;
   }
   .lk-nav {
-    position: relative;
-    z-index: 2;
+    position: relative; z-index: 2;
     display: flex; align-items: center; gap: 24px;
     padding: 22px 40px;
   }
@@ -104,7 +104,10 @@
     padding: 6px 14px; border-radius: 999px;
     display: inline-flex; align-items: center; gap: 8px;
   }
-  .lk-token-pill .sup { background: #fff; color: #e8341a; border-radius: 999px; font-size: 10px; padding: 1px 5px; font-weight: 800; }
+  .lk-token-pill .sup {
+    background: #fff; color: #e8341a; border-radius: 999px;
+    font-size: 10px; padding: 1px 5px; font-weight: 800;
+  }
   .lk-menu { display: flex; gap: 22px; color: #ddd; font-size: 14px; }
   .lk-menu a { opacity: .9; cursor: pointer; }
   .lk-right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
@@ -129,10 +132,8 @@
 
   /* ============= LK body ============= */
   .lk-body {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: 40px;
-    padding: 36px 40px 80px;
+    display: grid; grid-template-columns: 220px 1fr;
+    gap: 40px; padding: 36px 40px 80px;
     background: #fff;
   }
   .lk-side { display: flex; flex-direction: column; gap: 18px; padding-top: 10px; }
@@ -142,7 +143,6 @@
   }
   .lk-side .item.active { border-bottom: 2px solid #111; width: max-content; }
   .lk-side .item.muted { color: #9ca0a8; font-weight: 500; }
-
   .lk-h2 { font-size: 22px; font-weight: 700; margin: 0 0 14px; }
   .lk-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
@@ -173,7 +173,7 @@
   .bal-amount { font-size: 22px; font-weight: 700; }
   .bal-amount small { color: #9ca0a8; font-weight: 500; margin-left: 8px; }
 
-  /* ============= Skip toast ============= */
+  /* ============= Toast ============= */
   .toast {
     position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
     background: #111118; color: #fff; padding: 12px 18px;
@@ -192,7 +192,8 @@
     -webkit-backdrop-filter: blur(6px);
     display: none;
     align-items: center; justify-content: center;
-    padding: 40px 16px;
+    padding: 80px 16px 40px;
+    overflow-y: auto;
   }
   .backdrop.open { display: flex; }
   .modal {
@@ -205,9 +206,48 @@
   }
   @keyframes rise { from { transform: translateY(16px); opacity: 0; } to { transform: none; opacity: 1; } }
 
-  /* Step header */
-  .m-head {
-    padding: 22px 28px 0;
+  /* tusclyy crestik */
+  .m-close {
+    position: absolute; top: 12px; right: 12px;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.55);
+    color: #6b7280;
+    border: none; cursor: pointer;
+    font-size: 18px; font-weight: 300;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 5;
+    transition: opacity .15s, background .15s, color .15s;
+    opacity: .55;
+  }
+  .m-close:hover { opacity: 1; background: rgba(255,255,255,.95); color: #111; }
+
+  /* Creative banner — top of every modal */
+  .m-creative {
+    width: 100%; height: 160px;
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+  }
+  .m-creative svg.bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .m-creative .ovrl {
+    position: relative; z-index: 1; padding: 0 20px;
+    text-align: center;
+  }
+  .m-creative .eyebrow {
+    font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+    opacity: .85; font-weight: 700;
+  }
+  .m-creative .head {
+    font-size: 24px; font-weight: 800; line-height: 1.1; margin-top: 4px;
+    text-shadow: 0 1px 8px rgba(0,0,0,.45);
+  }
+
+  /* shared modal content */
+  .m-body { padding: 22px 28px 8px; }
+  .m-step-label {
+    font-size: 12px; letter-spacing: .12em; color: #9ca0a8;
+    text-transform: uppercase; font-weight: 700;
   }
   .m-progress {
     height: 6px; background: #f0f1f4; border-radius: 999px; overflow: hidden;
@@ -216,11 +256,7 @@
   .m-progress > span {
     display: block; height: 100%;
     background: linear-gradient(90deg, #ff8a3d, #e8341a);
-    width: 50%; transition: width .35s ease;
-  }
-  .m-step-label {
-    font-size: 12px; letter-spacing: .12em; color: #9ca0a8;
-    text-transform: uppercase; font-weight: 700;
+    transition: width .35s ease;
   }
   .m-title {
     font-size: 22px; font-weight: 700; margin: 8px 0 4px;
@@ -257,10 +293,19 @@
     flex: 1; border: none; outline: none; font-size: 15px;
     background: transparent;
   }
+  .m-textarea {
+    width: calc(100% - 56px);
+    margin: 4px 28px 0;
+    border: 1.5px solid var(--line); border-radius: 12px;
+    padding: 10px 12px; font-size: 14px;
+    resize: vertical; min-height: 64px;
+    font-family: inherit;
+  }
+  .m-textarea:focus { outline: none; border-color: #c8c9d0; }
 
   .m-foot {
     padding: 18px 28px 22px;
-    display: flex; align-items: center; gap: 16px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
   }
   .btn-primary {
     background: linear-gradient(90deg, #ff8a3d, #e8341a);
@@ -272,54 +317,37 @@
   .btn-primary:disabled {
     background: #e7e8ec; color: #a3a6ae; cursor: not-allowed; box-shadow: none;
   }
-  .btn-link {
-    background: transparent; color: #9ca0a8; border: none;
-    font-size: 12px; cursor: pointer; text-decoration: underline;
+  .btn-ghost {
+    background: #f4f5f7; color: #111; border: none;
+    border-radius: 12px; padding: 14px 18px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
   }
-  .btn-link:hover { color: #6b7280; }
+  .btn-ghost:hover { background: #ececf0; }
 
-  /* Offer card */
-  .offer { padding: 22px 28px 24px; }
-  .offer-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: #fff1ea; color: #d63a0b;
-    padding: 6px 12px; border-radius: 999px;
-    font-size: 12px; font-weight: 700; letter-spacing: .04em;
-    text-transform: uppercase;
-  }
-  .offer-title {
-    font-size: 24px; font-weight: 800; line-height: 1.2;
-    margin: 12px 0 4px;
-  }
-  .offer-product {
-    color: #6b7280; font-size: 14px; margin-bottom: 18px;
-  }
+  /* offer-specific */
   .offer-pricerow {
     display: flex; align-items: baseline; gap: 12px;
-    margin-bottom: 6px;
+    margin: 4px 28px 6px;
   }
-  .offer-new { font-size: 34px; font-weight: 800; color: #111; }
-  .offer-old {
-    text-decoration: line-through; color: #9ca0a8; font-size: 18px;
-  }
+  .offer-new { font-size: 32px; font-weight: 800; color: #111; }
+  .offer-old { text-decoration: line-through; color: #9ca0a8; font-size: 18px; }
   .offer-save {
     background: #ecfdf3; color: #027a48;
     font-size: 12px; font-weight: 700;
     padding: 3px 10px; border-radius: 999px;
   }
   .offer-bonus {
+    margin: 10px 28px;
     background: #fff6f0; border: 1px dashed #ffb37a;
     color: #b8410d; border-radius: 12px;
-    padding: 10px 14px; margin: 14px 0;
-    font-size: 14px; font-weight: 600;
+    padding: 10px 14px; font-size: 14px; font-weight: 600;
     display: flex; align-items: center; gap: 8px;
   }
-  .offer-bonus .star { font-size: 16px; }
-
   .offer-timer {
+    margin: 0 28px 10px;
     display: flex; align-items: center; gap: 10px;
     background: #fff5f4; border: 1px solid #f6c9c1;
-    border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;
+    border-radius: 12px; padding: 10px 14px;
     font-size: 14px; color: #b91c1c; font-weight: 600;
   }
   .offer-timer .clock {
@@ -328,8 +356,9 @@
     background: #b91c1c; color: #fff; padding: 4px 10px; border-radius: 8px;
   }
   .offer-social {
+    margin: 0 28px 14px;
     display: flex; align-items: center; gap: 10px;
-    color: #6b7280; font-size: 13px; margin-bottom: 18px;
+    color: #6b7280; font-size: 13px;
   }
   .avatars { display: inline-flex; }
   .avatars span {
@@ -343,30 +372,29 @@
   .a3 { background: linear-gradient(135deg,#ffb1b1,#ff2d55); }
   .a4 { background: linear-gradient(135deg,#c5f3c0,#3aa55c); }
 
-  .offer-cta { display: flex; flex-direction: column; gap: 8px; }
-  .offer-cta .btn-primary { flex: none; }
-  .offer-cta .btn-lose {
-    background: transparent; border: none;
-    color: #9ca0a8; font-size: 12px; cursor: pointer;
-    text-decoration: underline;
-  }
-  .offer-cta .btn-lose:hover { color: #6b7280; }
-
-  /* Final thank-you */
   .thanks { padding: 32px 28px; text-align: center; }
   .thanks h3 { margin: 0 0 8px; font-size: 22px; }
   .thanks p { color: #6b7280; margin: 0 0 18px; }
 
-  /* utility */
   .hidden { display: none !important; }
 </style>
 </head>
 <body>
 
-<!-- Demo panel -->
-<div class="demo" role="region" aria-label="Demo controls">
+<!-- ============= Demo panel ============= -->
+<div class="demo">
   <b>DEMO ·</b>
-  <span class="pill">сегмент пользователя</span>
+  <label>Сценарий
+    <select id="seg-scenario">
+      <option value="personal_offer" selected>Personal offer (2 шага + оффер)</option>
+      <option value="staking_upsell">Staking upsell (ATLA > $500)</option>
+      <option value="inactivity_barrier">Inactivity barrier (нет покупок 30+ дн)</option>
+      <option value="cross_sell_teki">Cross-sell TEKI (баланс 0)</option>
+      <option value="feedback_nps">Feedback / NPS</option>
+    </select>
+  </label>
+  <span class="sep"></span>
+  <span class="pill">сегмент</span>
   <label>Стример
     <select id="seg-streamer">
       <option value="none">Нет</option>
@@ -398,11 +426,11 @@
     </select>
   </label>
   <span class="spacer"></span>
-  <button id="btn-replay">↻ Запустить опрос</button>
+  <button id="btn-replay" class="primary">↻ Показать модалку</button>
   <button id="btn-reset">Сбросить демо</button>
 </div>
 
-<!-- LK mock -->
+<!-- ============= LK mock ============= -->
 <section class="lk">
   <div class="lk-hero">
     <div class="lk-nav">
@@ -432,8 +460,7 @@
       <div class="lk-grid">
         <div class="bal">
           <div class="bal-top">
-            <span class="ico atla">A</span>
-            <span class="bal-name">ATLA Balance</span>
+            <span class="ico atla">A</span><span class="bal-name">ATLA Balance</span>
             <span class="bal-actions">
               <button class="ghost">My packs &amp; certificates</button>
               <button class="ghost">Staking</button>
@@ -443,8 +470,7 @@
         </div>
         <div class="bal">
           <div class="bal-top">
-            <span class="ico jggl">J</span>
-            <span class="bal-name">JGGL Balance</span>
+            <span class="ico jggl">J</span><span class="bal-name">JGGL Balance</span>
             <span class="bal-actions">
               <button class="ghost">My packs &amp; certificates</button>
               <button class="ghost">Staking</button>
@@ -454,8 +480,7 @@
         </div>
         <div class="bal">
           <div class="bal-top">
-            <span class="ico teki">T</span>
-            <span class="bal-name">TEKI Balance</span>
+            <span class="ico teki">T</span><span class="bal-name">TEKI Balance</span>
             <span class="bal-actions">
               <button class="ghost">My packs &amp; certificates</button>
               <button class="ghost">Staking</button>
@@ -466,8 +491,7 @@
         </div>
         <div class="bal">
           <div class="bal-top">
-            <span class="ico imba">I</span>
-            <span class="bal-name">IMBA Balance</span>
+            <span class="ico imba">I</span><span class="bal-name">IMBA Balance</span>
             <span class="bal-actions">
               <button class="ghost">My packs &amp; certificates</button>
               <button class="ghost">Buy now</button>
@@ -491,211 +515,538 @@
   </div>
 </section>
 
-<!-- Skip toast -->
-<div id="toast" class="toast">Покажем при следующем входе ⏰</div>
+<!-- ============= Toast ============= -->
+<div id="toast" class="toast">Ответ сохранён ✓</div>
 
-<!-- Modal -->
-<div id="backdrop" class="backdrop" role="dialog" aria-modal="true" aria-labelledby="m-title">
-  <div class="modal">
-
-    <!-- STEP 1 -->
-    <div id="step-1">
-      <div class="m-head">
-        <div class="m-progress"><span style="width:50%"></span></div>
-        <div class="m-step-label">Шаг 1 из 2 · 30 секунд</div>
-        <div class="m-title" id="m-title">Какая цель у твоей ближайшей покупки?</div>
-        <div class="m-sub">Подберём персональный оффер под твою стратегию. За прохождение — бонус-токены.</div>
-      </div>
-      <div class="m-options" data-step="1">
-        <label class="opt" data-val="growth"><span class="dot"></span> Хочу быстрее разогнать портфель</label>
-        <label class="opt" data-val="passive"><span class="dot"></span> Стабильный пассивный доход через стейкинг</label>
-        <label class="opt" data-val="diversify"><span class="dot"></span> Диверсифицировать — добавить новый проект</label>
-        <div class="opt-custom">
-          <span class="dot" style="border:2px solid #c8c9d0; width:18px;height:18px;border-radius:50%;display:inline-block"></span>
-          <input type="text" placeholder="Свой вариант…" data-custom="1" />
-        </div>
-      </div>
-      <div class="m-foot">
-        <button class="btn-primary" id="next-1" disabled>Далее →</button>
-        <button class="btn-link" data-skip>Напомнить позже</button>
-      </div>
-    </div>
-
-    <!-- STEP 2 -->
-    <div id="step-2" class="hidden">
-      <div class="m-head">
-        <div class="m-progress"><span style="width:100%"></span></div>
-        <div class="m-step-label">Шаг 2 из 2 · почти готово</div>
-        <div class="m-title">Какой бюджет готов выделить на следующий шаг?</div>
-        <div class="m-sub">Это влияет только на размер пака и бонуса — никаких списаний.</div>
-      </div>
-      <div class="m-options" data-step="2">
-        <label class="opt" data-val="lt200"><span class="dot"></span> До $200</label>
-        <label class="opt" data-val="200-1000"><span class="dot"></span> $200 – $1 000</label>
-        <label class="opt" data-val="1000+"><span class="dot"></span> $1 000+</label>
-        <div class="opt-custom">
-          <span class="dot" style="border:2px solid #c8c9d0; width:18px;height:18px;border-radius:50%;display:inline-block"></span>
-          <input type="text" placeholder="Свой бюджет…" data-custom="2" />
-        </div>
-      </div>
-      <div class="m-foot">
-        <button class="btn-primary" id="next-2" disabled>Показать мой оффер →</button>
-        <button class="btn-link" data-skip>Напомнить позже</button>
-      </div>
-    </div>
-
-    <!-- OFFER -->
-    <div id="step-offer" class="hidden">
-      <div class="offer">
-        <span class="offer-badge">🔥 персональный оффер</span>
-        <div class="offer-title" id="o-title">Усиль ставку под Phil — добери JGGL ×2 пак</div>
-        <div class="offer-product" id="o-product">JGGL Booster Pack · 2× токена + закрытый Discord-канал</div>
-
-        <div class="offer-pricerow">
-          <span class="offer-new" id="o-new">$89</span>
-          <span class="offer-old" id="o-old">$129</span>
-          <span class="offer-save" id="o-save">−31%</span>
-        </div>
-
-        <div class="offer-bonus">
-          <span class="star">🎁</span>
-          <span><b id="o-bonus">+15%</b> бонусных токенов начислено за прохождение опроса</span>
-        </div>
-
-        <div class="offer-timer">
-          <span class="clock" id="o-clock">15:00</span>
-          <span>Оффер сгорит после таймера — без продления</span>
-        </div>
-
-        <div class="offer-social">
-          <span class="avatars">
-            <span class="a1"></span><span class="a2"></span><span class="a3"></span><span class="a4"></span>
-          </span>
-          <span><b id="o-social">237</b> инвесторов забрали этот оффер сегодня</span>
-        </div>
-
-        <div class="offer-cta">
-          <button class="btn-primary" id="take-offer">Забрать оффер →</button>
-          <button class="btn-lose" id="lose-offer">Отказаться (бонус сгорит)</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- THANKS -->
-    <div id="step-thanks" class="hidden">
-      <div class="thanks">
-        <h3>Готово ✨</h3>
-        <p>Оффер закреплён в твоём ЛК на 24 часа. Ссылка ушла в Telegram.</p>
-        <button class="btn-primary" style="max-width:240px;margin:0 auto;" id="close-thanks">Вернуться в кабинет</button>
-      </div>
-    </div>
-
+<!-- ============= Modal ============= -->
+<div id="backdrop" class="backdrop" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <!-- creative + close + content rendered by JS -->
   </div>
 </div>
 
 <script>
 (function () {
-  // ---------- state ----------
-  const state = { step: 1, answer1: null, answer2: null };
   const $ = (id) => document.getElementById(id);
   const backdrop = $('backdrop');
+  const modal = $('modal');
 
-  // ---------- offer rules ----------
-  // segment: { streamer, volume, refs, div }
-  // returns: { title, product, oldPrice, newPrice, bonusPct, social }
+  // -------- creatives (SVG banners) --------
+  // Selected by (scenario, streamer). Returns inline SVG markup + eyebrow + head.
+  function creative(scenario, streamer) {
+    // base palettes by streamer
+    const palette = {
+      phil:  { from: '#1a1f33', to: '#3b2a10', accent: '#d4a64a', tag: 'PHIL · HARD ASSETS' },
+      brad:  { from: '#0b1a2e', to: '#3a0f1a', accent: '#e84a3a', tag: 'BRAD · GREAT AWAKENING' },
+      none:  { from: '#1a0d10', to: '#2a0f15', accent: '#ff8a3d', tag: 'BOOSTYFI · EXCLUSIVE' },
+    }[streamer] || { from:'#1a0d10', to:'#2a0f15', accent:'#ff8a3d', tag:'BOOSTYFI' };
+
+    // motif by scenario
+    const motif = motifSvg(scenario, palette);
+
+    // headline by combo
+    const head = headlineFor(scenario, streamer);
+
+    return `
+      <div class="m-creative">
+        <svg class="bg" viewBox="0 0 600 160" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g-${scenario}-${streamer}" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0%" stop-color="${palette.from}"/>
+              <stop offset="100%" stop-color="${palette.to}"/>
+            </linearGradient>
+            <radialGradient id="r-${scenario}-${streamer}" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="${palette.accent}" stop-opacity=".55"/>
+              <stop offset="100%" stop-color="${palette.accent}" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect width="600" height="160" fill="url(#g-${scenario}-${streamer})"/>
+          <circle cx="490" cy="80" r="120" fill="url(#r-${scenario}-${streamer})"/>
+          ${soundwave(palette.accent)}
+          ${motif}
+        </svg>
+        <div class="ovrl">
+          <div class="eyebrow">${palette.tag}</div>
+          <div class="head">${head}</div>
+        </div>
+      </div>`;
+  }
+
+  function soundwave(color) {
+    let bars = '';
+    for (let i = 0; i < 60; i++) {
+      const x = i * 10 + 4;
+      const h = 8 + Math.abs(Math.sin(i * 0.6) * 40);
+      bars += `<rect x="${x}" y="${80 - h/2}" width="2" height="${h}" fill="${color}" opacity=".35"/>`;
+    }
+    return bars;
+  }
+
+  function motifSvg(scenario, p) {
+    const a = p.accent;
+    switch (scenario) {
+      case 'personal_offer':
+        // exclusive seal / star burst
+        return `
+          <g transform="translate(120,80)">
+            <circle r="36" fill="none" stroke="${a}" stroke-width="2" opacity=".7"/>
+            <circle r="22" fill="${a}" opacity=".25"/>
+            <text y="6" text-anchor="middle" font-family="-apple-system, sans-serif"
+                  font-size="16" font-weight="800" fill="#fff">VIP</text>
+          </g>`;
+      case 'staking_upsell':
+        // staking coins
+        return `
+          <g transform="translate(110,82)">
+            <ellipse cx="0" cy="20" rx="40" ry="10" fill="${a}" opacity=".25"/>
+            <ellipse cx="0" cy="10" rx="40" ry="10" fill="${a}" opacity=".45"/>
+            <ellipse cx="0" cy="0" rx="40" ry="10" fill="${a}" opacity=".7"/>
+            <text y="4" text-anchor="middle" font-size="11" font-weight="800" fill="#1a0d10">ATLA</text>
+            <path d="M -50 -10 q 25 -30 50 0" stroke="${a}" stroke-width="2" fill="none" opacity=".8"/>
+            <polygon points="0,-40 -5,-32 5,-32" fill="${a}"/>
+          </g>`;
+      case 'inactivity_barrier':
+        // pause / clock motif
+        return `
+          <g transform="translate(120,80)">
+            <circle r="40" fill="none" stroke="${a}" stroke-width="2" opacity=".6"/>
+            <rect x="-12" y="-18" width="8" height="36" fill="${a}" opacity=".8"/>
+            <rect x="4" y="-18" width="8" height="36" fill="${a}" opacity=".8"/>
+          </g>`;
+      case 'cross_sell_teki':
+        // crystal
+        return `
+          <g transform="translate(120,80)">
+            <polygon points="0,-40 30,-10 20,30 -20,30 -30,-10" fill="${a}" opacity=".75"/>
+            <polygon points="0,-40 30,-10 0,-10" fill="#fff" opacity=".25"/>
+            <polygon points="-30,-10 0,-10 -20,30" fill="#000" opacity=".25"/>
+            <text y="4" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">TEKI</text>
+          </g>`;
+      case 'feedback_nps':
+        // smiley
+        return `
+          <g transform="translate(120,80)">
+            <circle r="38" fill="${a}" opacity=".75"/>
+            <circle cx="-12" cy="-6" r="4" fill="#1a0d10"/>
+            <circle cx="12" cy="-6" r="4" fill="#1a0d10"/>
+            <path d="M -16 10 q 16 18 32 0" stroke="#1a0d10" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </g>`;
+      default: return '';
+    }
+  }
+
+  function headlineFor(scenario, streamer) {
+    if (scenario === 'personal_offer') {
+      if (streamer === 'phil') return 'Защити капитал. Усиль позицию.';
+      if (streamer === 'brad') return 'The Event близко. Готов?';
+      return 'Персональный оффер для тебя';
+    }
+    if (scenario === 'staking_upsell') {
+      if (streamer === 'phil') return 'Заставь hard assets работать';
+      if (streamer === 'brad') return 'Стейкинг до Global Reset';
+      return 'Увеличь стейкинг ATLA';
+    }
+    if (scenario === 'inactivity_barrier') {
+      if (streamer === 'phil') return 'Что-то остановило?';
+      if (streamer === 'brad') return 'Не упусти момент';
+      return 'Давно тебя не видели';
+    }
+    if (scenario === 'cross_sell_teki') return 'Познакомься с TEKI';
+    if (scenario === 'feedback_nps') return 'Помоги нам стать лучше';
+    return '';
+  }
+
+  // -------- scenario content (per TZ #1) --------
+  function renderScenario() {
+    const scenario = $('seg-scenario').value;
+    const streamer = $('seg-streamer').value;
+    state.scenario = scenario;
+    state.streamer = streamer;
+    state.answer1 = null; state.answer2 = null; state.dismissedAt = null;
+
+    if (scenario === 'personal_offer') return renderPersonalOffer(streamer);
+    if (scenario === 'staking_upsell') return renderStakingUpsell(streamer);
+    if (scenario === 'inactivity_barrier') return renderInactivity(streamer);
+    if (scenario === 'cross_sell_teki') return renderCrossSell(streamer);
+    if (scenario === 'feedback_nps') return renderFeedback(streamer);
+  }
+
+  // -------- Scenario 1: Personal offer (multi-step) --------
+  function renderPersonalOffer(streamer) {
+    state.step = 1;
+    modal.innerHTML = `
+      <button class="m-close" data-close aria-label="Закрыть">✕</button>
+      ${creative('personal_offer', streamer)}
+      <div id="step-1">
+        <div class="m-body">
+          <div class="m-progress"><span style="width:50%"></span></div>
+          <div class="m-step-label">Шаг 1 из 2 · 30 секунд</div>
+          <div class="m-title">${narr(streamer, {
+            phil: 'Какой результат от ближайшей покупки для тебя главный?',
+            brad: 'К чему готовишься в первую очередь?',
+            none: 'Какая цель у твоей ближайшей покупки?',
+          })}</div>
+          <div class="m-sub">Подберём персональный оффер. За прохождение — бонус-токены.</div>
+        </div>
+        <div class="m-options" data-step="1">
+          ${optionsForStep1(streamer)}
+          <div class="opt-custom">
+            <span class="dot" style="border:2px solid #c8c9d0; width:18px;height:18px;border-radius:50%;display:inline-block"></span>
+            <input type="text" placeholder="Свой вариант…" data-custom="1" />
+          </div>
+        </div>
+        <div class="m-foot">
+          <button class="btn-primary" id="next-1" disabled>Далее →</button>
+        </div>
+      </div>`;
+    bindOptions();
+    bindClose();
+    $('next-1').addEventListener('click', () => goStep2());
+  }
+
+  function optionsForStep1(streamer) {
+    const sets = {
+      phil: [
+        ['growth',    'Защитить капитал от fiat collapse'],
+        ['passive',   'Стабильный hard-asset стейкинг'],
+        ['diversify', 'Добавить позицию под Reset'],
+      ],
+      brad: [
+        ['growth',    'Войти до The Event'],
+        ['passive',   'Подготовиться к GESARA / QFS'],
+        ['diversify', 'Расширить участие в Great Awakening'],
+      ],
+      none: [
+        ['growth',    'Хочу быстрее разогнать портфель'],
+        ['passive',   'Стабильный пассивный доход через стейкинг'],
+        ['diversify', 'Диверсифицировать — добавить новый проект'],
+      ],
+    };
+    return sets[streamer].map(([v, label]) =>
+      `<label class="opt" data-val="${v}"><span class="dot"></span> ${label}</label>`
+    ).join('');
+  }
+
+  function goStep2() {
+    state.step = 2;
+    const streamer = state.streamer;
+    modal.innerHTML = `
+      <button class="m-close" data-close aria-label="Закрыть">✕</button>
+      ${creative('personal_offer', streamer)}
+      <div>
+        <div class="m-body">
+          <div class="m-progress"><span style="width:100%"></span></div>
+          <div class="m-step-label">Шаг 2 из 2 · почти готово</div>
+          <div class="m-title">Какой бюджет готов выделить на следующий шаг?</div>
+          <div class="m-sub">Влияет только на размер пака и бонуса — никаких списаний.</div>
+        </div>
+        <div class="m-options" data-step="2">
+          <label class="opt" data-val="lt200"><span class="dot"></span> До $200</label>
+          <label class="opt" data-val="200-1000"><span class="dot"></span> $200 – $1 000</label>
+          <label class="opt" data-val="1000+"><span class="dot"></span> $1 000+</label>
+          <div class="opt-custom">
+            <span class="dot" style="border:2px solid #c8c9d0; width:18px;height:18px;border-radius:50%;display:inline-block"></span>
+            <input type="text" placeholder="Свой бюджет…" data-custom="2" />
+          </div>
+        </div>
+        <div class="m-foot">
+          <button class="btn-primary" id="next-2" disabled>Показать мой оффер →</button>
+        </div>
+      </div>`;
+    bindOptions(); bindClose();
+    $('next-2').addEventListener('click', renderOfferCard);
+  }
+
+  function renderOfferCard() {
+    state.step = 'offer';
+    const seg = currentSegment();
+    const o = pickOffer(seg);
+    const save = Math.round((1 - o.newPrice / o.oldPrice) * 100);
+
+    modal.innerHTML = `
+      <button class="m-close" data-close aria-label="Закрыть">✕</button>
+      ${creative('personal_offer', state.streamer)}
+      <div>
+        <div class="m-body">
+          <div class="m-step-label" style="color:#d63a0b;">🔥 персональный оффер</div>
+          <div class="m-title">${o.title}</div>
+          <div class="m-sub">${o.product}</div>
+        </div>
+        <div class="offer-pricerow">
+          <span class="offer-new">$${o.newPrice.toLocaleString('en-US')}</span>
+          <span class="offer-old">$${o.oldPrice.toLocaleString('en-US')}</span>
+          <span class="offer-save">−${save}%</span>
+        </div>
+        <div class="offer-bonus">🎁 <span><b>+${o.bonusPct}%</b> бонусных токенов за прохождение опроса</span></div>
+        <div class="offer-timer">
+          <span class="clock" id="o-clock">15:00</span>
+          <span>Оффер сгорит после таймера — без продления</span>
+        </div>
+        <div class="offer-social">
+          <span class="avatars"><span class="a1"></span><span class="a2"></span><span class="a3"></span><span class="a4"></span></span>
+          <span><b>${o.social}</b> инвесторов забрали этот оффер сегодня</span>
+        </div>
+        <div class="m-foot">
+          <button class="btn-primary" id="take-offer">Забрать оффер →</button>
+          <button class="btn-ghost" id="lose-offer" style="flex:0 0 auto;">Отказаться (бонус сгорит)</button>
+        </div>
+      </div>`;
+    bindClose();
+    startTimer();
+    $('take-offer').addEventListener('click', () => {
+      localStorage.setItem('boostyfi_modal_done', '1');
+      renderThanks('Оффер закреплён в твоём ЛК на 24 часа. Ссылка ушла в Telegram.');
+    });
+    $('lose-offer').addEventListener('click', () => {
+      localStorage.setItem('boostyfi_modal_done', '1');
+      closeModal('Ответ сохранён · бонус сгорел');
+    });
+  }
+
+  // -------- Scenario 2: Staking upsell --------
+  function renderStakingUpsell(streamer) {
+    const title = narr(streamer, {
+      phil: 'Hard asset должен работать — заставь ATLA капать',
+      brad: 'До Global Reset осталось — застейкай ATLA сейчас',
+      none: 'Хочешь увеличить стейкинг?',
+    });
+    const sub = narr(streamer, {
+      phil: 'Твой баланс ATLA — твоя страховка от fiat collapse. APY × 1.5 для стейкеров до конца недели.',
+      brad: 'Активный стейкинг ставит тебя в White Hat allowlist при transition к QFS.',
+      none: 'Активный стейкинг даёт тебе пассивный доход и доступ к закрытым дропам.',
+    });
+    modal.innerHTML = `
+      <button class="m-close" data-close>✕</button>
+      ${creative('staking_upsell', streamer)}
+      <div class="m-body">
+        <div class="m-title">${title}</div>
+        <div class="m-sub">${sub}</div>
+      </div>
+      <div class="m-options" data-step="single">
+        <label class="opt" data-val="yes"><span class="dot"></span> Да, застейкать ATLA сейчас</label>
+        <label class="opt" data-val="later"><span class="dot"></span> Позже — напомните</label>
+        <label class="opt" data-val="info"><span class="dot"></span> Узнать больше про APY и условия</label>
+      </div>
+      <div class="m-foot">
+        <button class="btn-primary" id="single-submit" disabled>Подтвердить</button>
+      </div>`;
+    bindOptions(); bindClose();
+    $('single-submit').addEventListener('click', () => {
+      localStorage.setItem('boostyfi_modal_done', '1');
+      closeModal('Ответ сохранён ✓');
+    });
+  }
+
+  // -------- Scenario 3: Inactivity / barriers (with textarea) --------
+  function renderInactivity(streamer) {
+    const title = narr(streamer, {
+      phil: 'Что остановило? Мы рядом.',
+      brad: 'Время на исходе — что мешает зайти?',
+      none: 'Давно не заходил. Что остановило?',
+    });
+    modal.innerHTML = `
+      <button class="m-close" data-close>✕</button>
+      ${creative('inactivity_barrier', streamer)}
+      <div class="m-body">
+        <div class="m-title">${title}</div>
+        <div class="m-sub">Скажи коротко — поможем подобрать решение или вернёмся с предложением на твоих условиях.</div>
+      </div>
+      <div class="m-options" data-step="single">
+        <label class="opt" data-val="price"><span class="dot"></span> Цена — дорого для меня сейчас</label>
+        <label class="opt" data-val="unclear"><span class="dot"></span> Не до конца понимаю продукт</label>
+        <label class="opt" data-val="wait"><span class="dot"></span> Жду подходящего момента</label>
+      </div>
+      <textarea class="m-textarea" id="m-msg" placeholder="Что ещё важно сказать? (по желанию)"></textarea>
+      <div class="m-foot">
+        <button class="btn-primary" id="single-submit" disabled>Отправить</button>
+      </div>`;
+    bindOptions(); bindClose();
+    $('single-submit').addEventListener('click', () => {
+      localStorage.setItem('boostyfi_modal_done', '1');
+      const msg = $('m-msg').value.trim();
+      closeModal(msg ? 'Спасибо! Сообщение получено.' : 'Ответ сохранён ✓');
+    });
+  }
+
+  // -------- Scenario 4: Cross-sell TEKI --------
+  function renderCrossSell(streamer) {
+    modal.innerHTML = `
+      <button class="m-close" data-close>✕</button>
+      ${creative('cross_sell_teki', streamer)}
+      <div class="m-body">
+        <div class="m-title">Познакомься с TEKI</div>
+        <div class="m-sub">Художественный токен с роялти от продаж. Сейчас доступен Starter-пак для держателей ATLA — −20% и +10% бонусных токенов.</div>
+      </div>
+      <div class="m-options" data-step="single">
+        <label class="opt" data-val="buy"><span class="dot"></span> Купить Starter-пак</label>
+        <label class="opt" data-val="learn"><span class="dot"></span> Узнать больше</label>
+        <label class="opt" data-val="no"><span class="dot"></span> Не интересно</label>
+      </div>
+      <div class="m-foot">
+        <button class="btn-primary" id="single-submit" disabled>Подтвердить</button>
+      </div>`;
+    bindOptions(); bindClose();
+    $('single-submit').addEventListener('click', () => {
+      localStorage.setItem('boostyfi_modal_done', '1');
+      closeModal('Ответ сохранён ✓');
+    });
+  }
+
+  // -------- Scenario 5: Feedback / NPS (with textarea) --------
+  function renderFeedback(streamer) {
+    modal.innerHTML = `
+      <button class="m-close" data-close>✕</button>
+      ${creative('feedback_nps', streamer)}
+      <div class="m-body">
+        <div class="m-title">Как тебе обновлённый личный кабинет?</div>
+        <div class="m-sub">Это займёт 10 секунд. Каждый ответ читает команда.</div>
+      </div>
+      <div class="m-options" data-step="single">
+        <label class="opt" data-val="like"><span class="dot"></span> 😍 Нравится</label>
+        <label class="opt" data-val="neutral"><span class="dot"></span> 😐 Нейтрально</label>
+        <label class="opt" data-val="dislike"><span class="dot"></span> 😕 Не нравится</label>
+      </div>
+      <textarea class="m-textarea" id="m-msg" placeholder="Что улучшить? (по желанию)"></textarea>
+      <div class="m-foot">
+        <button class="btn-primary" id="single-submit" disabled>Отправить отзыв</button>
+      </div>`;
+    bindOptions(); bindClose();
+    $('single-submit').addEventListener('click', () => {
+      localStorage.setItem('boostyfi_modal_done', '1');
+      closeModal('Спасибо за обратную связь ✓');
+    });
+  }
+
+  function renderThanks(text) {
+    modal.innerHTML = `
+      <button class="m-close" data-close>✕</button>
+      <div class="thanks">
+        <h3>Готово ✨</h3>
+        <p>${text}</p>
+        <button class="btn-primary" style="max-width:240px;margin:0 auto;" data-close>Вернуться в кабинет</button>
+      </div>`;
+    bindClose();
+  }
+
+  // -------- helpers --------
+  function narr(streamer, dict) { return dict[streamer] || dict.none; }
+  function currentSegment() {
+    return {
+      streamer: $('seg-streamer').value,
+      volume:   $('seg-volume').value,
+      refs:     $('seg-refs').value,
+      div:      $('seg-div').value,
+    };
+  }
+
+  function bindOptions() {
+    document.querySelectorAll('.m-options').forEach(group => {
+      group.addEventListener('click', e => {
+        const opt = e.target.closest('.opt');
+        if (!opt) return;
+        group.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        const customInput = group.querySelector('input[data-custom]');
+        if (customInput) customInput.value = '';
+        setAnswer(group.dataset.step, opt.dataset.val);
+      });
+      const custom = group.querySelector('input[data-custom]');
+      if (custom) {
+        custom.addEventListener('input', () => {
+          group.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+          setAnswer(group.dataset.step, custom.value.trim() ? 'custom:' + custom.value.trim() : null);
+        });
+      }
+    });
+  }
+
+  function setAnswer(step, val) {
+    if (step === '1') { state.answer1 = val; const b = $('next-1'); if (b) b.disabled = !val; }
+    if (step === '2') { state.answer2 = val; const b = $('next-2'); if (b) b.disabled = !val; }
+    if (step === 'single') { state.single = val; const b = $('single-submit'); if (b) b.disabled = !val; }
+  }
+
+  function bindClose() {
+    modal.querySelectorAll('[data-close]').forEach(el => {
+      el.addEventListener('click', () => {
+        localStorage.setItem('boostyfi_modal_done', '1');
+        closeModal('Закрыто без ответа · логируется как dismissed');
+      });
+    });
+  }
+
+  // -------- offer rules (Phil/Brad narrative) --------
   function pickOffer(seg) {
     const streamerLabel = { phil: 'Phil', brad: 'Brad', none: '' }[seg.streamer];
+    // narrative wrappers
+    const tag = (t) => streamerLabel === 'Phil' ? `Hard-asset slot: ${t}`
+                    : streamerLabel === 'Brad' ? `White Hat allocation: ${t}` : t;
 
-    // Whales with huge volume
     if (seg.volume === '50k+') {
-      if (seg.div === 'all-but-one') {
-        return {
-          title: 'Заверши коллекцию — последний токен по закрытой цене',
-          product: 'Closed-door allocation · IMBA Whale Slot + 1.0 ATLA в подарок',
-          oldPrice: 4900, newPrice: 3490, bonusPct: 20, social: 41,
-        };
-      }
-      if (seg.refs === 'lt5') {
-        return {
-          title: 'Активируй реф-программу с ×3 коэффициентом',
-          product: 'Whale Referral Boost · персональная ссылка + $500 в JGGL',
-          oldPrice: 1500, newPrice: 990, bonusPct: 25, social: 58,
-        };
-      }
+      if (seg.div === 'all-but-one') return {
+        title: tag('Заверши коллекцию — последний токен по закрытой цене'),
+        product: 'Closed-door allocation · IMBA Whale Slot + 1.0 ATLA в подарок',
+        oldPrice: 4900, newPrice: 3490, bonusPct: 20, social: 41,
+      };
+      if (seg.refs === 'lt5') return {
+        title: tag('Активируй реф-программу с ×3 коэффициентом'),
+        product: 'Whale Referral Boost · персональная ссылка + $500 в JGGL',
+        oldPrice: 1500, newPrice: 990, bonusPct: 25, social: 58,
+      };
       return {
-        title: 'VIP-аллокация под ' + (streamerLabel || 'топ-стримера'),
+        title: tag('VIP-аллокация под ' + (streamerLabel || 'топ-стримера')),
         product: 'Founders Pack · 5× ATLA + приватный звонок с командой',
         oldPrice: 7800, newPrice: 5900, bonusPct: 18, social: 31,
       };
     }
-
-    // Mid volume
     if (seg.volume === '25k' || seg.volume === '50k') {
-      if (seg.div === 'two' && streamerLabel === 'Brad') {
-        return {
-          title: 'Закрой портфель — последний слот под Brad',
-          product: 'IMBA Certificate · −22% и +10% бонусных IMBA',
-          oldPrice: 1290, newPrice: 990, bonusPct: 10, social: 142,
-        };
-      }
-      if (seg.div === 'one') {
-        return {
-          title: 'Добавь второй проект — диверсификация ×2',
-          product: 'Diversify Pack · TEKI + IMBA в одном паке',
-          oldPrice: 890, newPrice: 690, bonusPct: 12, social: 188,
-        };
-      }
-      if (seg.refs === 'gt20') {
-        return {
-          title: 'Реф-капитан: ×2 на следующую покупку',
-          product: 'Captain Pack · JGGL + бонусные реф-токены',
-          oldPrice: 1190, newPrice: 790, bonusPct: 18, social: 96,
-        };
-      }
+      if (seg.div === 'two' && streamerLabel === 'Brad') return {
+        title: 'Закрой портфель — последний слот под Brad',
+        product: 'IMBA Certificate · −22% и +10% бонусных IMBA',
+        oldPrice: 1290, newPrice: 990, bonusPct: 10, social: 142,
+      };
+      if (seg.div === 'one') return {
+        title: tag('Добавь второй проект — диверсификация ×2'),
+        product: 'Diversify Pack · TEKI + IMBA в одном паке',
+        oldPrice: 890, newPrice: 690, bonusPct: 12, social: 188,
+      };
+      if (seg.refs === 'gt20') return {
+        title: 'Реф-капитан: ×2 на следующую покупку',
+        product: 'Captain Pack · JGGL + бонусные реф-токены',
+        oldPrice: 1190, newPrice: 790, bonusPct: 18, social: 96,
+      };
       return {
-        title: 'Усиль позицию под ' + (streamerLabel || 'свой проект'),
+        title: tag('Усиль позицию под ' + (streamerLabel || 'свой проект')),
         product: 'Mid Booster Pack · 1.5× к текущему балансу',
         oldPrice: 690, newPrice: 490, bonusPct: 12, social: 174,
       };
     }
-
-    // Small volume (default $5k)
-    if (seg.div === 'bits') {
-      return {
-        title: 'Сфокусируйся на одном — собери Starter под ' + (streamerLabel || 'топ-стример'),
-        product: 'Focus Starter · ATLA + JGGL в одной точке входа',
-        oldPrice: 199, newPrice: 129, bonusPct: 15, social: 312,
-      };
-    }
-    if (seg.div === 'one' && streamerLabel === 'Phil') {
-      return {
-        title: 'Усиль ставку под Phil — добери JGGL ×2 пак',
-        product: 'JGGL Booster Pack · 2× токена + закрытый Discord-канал',
-        oldPrice: 129, newPrice: 89, bonusPct: 15, social: 237,
-      };
-    }
-    if (seg.div === 'one' && streamerLabel === 'Brad') {
-      return {
-        title: 'Удвой ставку под Brad — IMBA ×2 пак',
-        product: 'IMBA Booster Pack · 2× токена + ранний доступ к дропам',
-        oldPrice: 129, newPrice: 89, bonusPct: 15, social: 198,
-      };
-    }
-    if (seg.streamer === 'none' && seg.refs === 'gt20') {
-      return {
-        title: 'VIP-вход под топ-стримера с ×2 реф-бонусом',
-        product: 'Premiere Pack · войти под Phil или Brad, эксклюзив 24ч',
-        oldPrice: 249, newPrice: 169, bonusPct: 20, social: 84,
-      };
-    }
-    if (seg.streamer === 'none') {
-      return {
-        title: 'Выбери стримера и зайди со скидкой первого входа',
-        product: 'First-time Pack · Phil или Brad на выбор + welcome бонус',
-        oldPrice: 149, newPrice: 99, bonusPct: 12, social: 421,
-      };
-    }
-    // fallback
+    // small volume
+    if (seg.div === 'bits') return {
+      title: tag('Сфокусируйся на одном — собери Starter под ' + (streamerLabel || 'топ-стример')),
+      product: 'Focus Starter · ATLA + JGGL в одной точке входа',
+      oldPrice: 199, newPrice: 129, bonusPct: 15, social: 312,
+    };
+    if (seg.div === 'one' && streamerLabel === 'Phil') return {
+      title: 'Phil-стек: удвой ставку JGGL и hard-asset бонус',
+      product: 'JGGL ×2 + silver-backed бонус (10% к покупке)',
+      oldPrice: 129, newPrice: 89, bonusPct: 15, social: 237,
+    };
+    if (seg.div === 'one' && streamerLabel === 'Brad') return {
+      title: 'Brad-аллокация: IMBA ×2 до The Event',
+      product: 'IMBA Booster Pack · ранний доступ к дропам Great Awakening',
+      oldPrice: 129, newPrice: 89, bonusPct: 15, social: 198,
+    };
+    if (seg.streamer === 'none' && seg.refs === 'gt20') return {
+      title: 'VIP-вход под топ-стримера с ×2 реф-бонусом',
+      product: 'Premiere Pack · войти под Phil или Brad, эксклюзив 24ч',
+      oldPrice: 249, newPrice: 169, bonusPct: 20, social: 84,
+    };
+    if (seg.streamer === 'none') return {
+      title: 'Выбери стримера и зайди со скидкой первого входа',
+      product: 'First-time Pack · Phil или Brad на выбор + welcome бонус',
+      oldPrice: 149, newPrice: 99, bonusPct: 12, social: 421,
+    };
     return {
       title: 'Персональный пак под твой профиль',
       product: 'Custom Pack · сбалансированный набор по твоим ответам',
@@ -703,87 +1054,46 @@
     };
   }
 
-  function renderOffer() {
-    const seg = {
-      streamer: $('seg-streamer').value,
-      volume: $('seg-volume').value,
-      refs: $('seg-refs').value,
-      div: $('seg-div').value,
+  // -------- timer --------
+  let timerId = null;
+  function startTimer() {
+    if (timerId) clearInterval(timerId);
+    let t = 15 * 60;
+    const el = $('o-clock');
+    const tick = () => {
+      const m = String(Math.floor(t / 60)).padStart(2, '0');
+      const s = String(t % 60).padStart(2, '0');
+      if (el) el.textContent = m + ':' + s;
+      if (t-- <= 0) clearInterval(timerId);
     };
-    const o = pickOffer(seg);
-    $('o-title').textContent = o.title;
-    $('o-product').textContent = o.product;
-    $('o-new').textContent = '$' + o.newPrice.toLocaleString('en-US');
-    $('o-old').textContent = '$' + o.oldPrice.toLocaleString('en-US');
-    const save = Math.round((1 - o.newPrice / o.oldPrice) * 100);
-    $('o-save').textContent = '−' + save + '%';
-    $('o-bonus').textContent = '+' + o.bonusPct + '%';
-    $('o-social').textContent = o.social;
+    tick();
+    timerId = setInterval(tick, 1000);
   }
 
-  // ---------- modal open/close ----------
+  // -------- open / close --------
+  const state = { scenario: 'personal_offer', streamer: 'phil', step: 1 };
+
   function openModal() {
+    renderScenario();
     backdrop.classList.add('open');
     document.body.style.overflow = 'hidden';
-    goStep(1);
   }
-  function closeModal(showToast) {
+  function closeModal(toastText) {
     backdrop.classList.remove('open');
     document.body.style.overflow = '';
-    if (showToast) {
+    if (timerId) { clearInterval(timerId); timerId = null; }
+    if (toastText) {
       const t = $('toast');
+      t.textContent = toastText;
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 2400);
     }
   }
 
-  function goStep(s) {
-    state.step = s;
-    $('step-1').classList.toggle('hidden', s !== 1);
-    $('step-2').classList.toggle('hidden', s !== 2);
-    $('step-offer').classList.toggle('hidden', s !== 'offer');
-    $('step-thanks').classList.toggle('hidden', s !== 'thanks');
-    if (s === 'offer') { renderOffer(); startTimer(); }
-  }
-
-  // ---------- options selection ----------
-  document.querySelectorAll('.m-options').forEach(group => {
-    const step = group.dataset.step;
-    group.addEventListener('click', e => {
-      const opt = e.target.closest('.opt');
-      if (!opt) return;
-      group.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
-      opt.classList.add('selected');
-      const customInput = group.querySelector('input[data-custom]');
-      if (customInput) customInput.value = '';
-      setAnswer(step, opt.dataset.val);
-    });
-    const custom = group.querySelector('input[data-custom]');
-    if (custom) {
-      custom.addEventListener('input', () => {
-        group.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
-        setAnswer(step, custom.value.trim() ? 'custom:' + custom.value.trim() : null);
-      });
-    }
-  });
-
-  function setAnswer(step, val) {
-    if (step === '1') { state.answer1 = val; $('next-1').disabled = !val; }
-    if (step === '2') { state.answer2 = val; $('next-2').disabled = !val; }
-  }
-
-  $('next-1').addEventListener('click', () => goStep(2));
-  $('next-2').addEventListener('click', () => goStep('offer'));
-
-  document.querySelectorAll('[data-skip]').forEach(b =>
-    b.addEventListener('click', () => closeModal(true))
-  );
-
-  // Esc + backdrop click = NO close (blocking modal)
+  // backdrop click — modal shakes (blocking)
   backdrop.addEventListener('click', e => {
     if (e.target === backdrop) {
-      const m = backdrop.querySelector('.modal');
-      m.animate(
+      modal.animate(
         [{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' },
          { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }],
         { duration: 220 }
@@ -794,60 +1104,26 @@
     if (e.key === 'Escape' && backdrop.classList.contains('open')) e.preventDefault();
   });
 
-  // ---------- timer ----------
-  let timerId = null;
-  function startTimer() {
-    if (timerId) clearInterval(timerId);
-    let t = 15 * 60;
-    const el = $('o-clock');
-    const tick = () => {
-      const m = String(Math.floor(t / 60)).padStart(2, '0');
-      const s = String(t % 60).padStart(2, '0');
-      el.textContent = m + ':' + s;
-      if (t-- <= 0) clearInterval(timerId);
-    };
-    tick();
-    timerId = setInterval(tick, 1000);
-  }
-
-  // ---------- offer actions ----------
-  $('take-offer').addEventListener('click', () => {
-    localStorage.setItem('boostyfi_survey_done', '1');
-    goStep('thanks');
-  });
-  $('lose-offer').addEventListener('click', () => {
-    localStorage.setItem('boostyfi_survey_done', '1');
-    closeModal(true);
-  });
-  $('close-thanks').addEventListener('click', () => closeModal(false));
-
-  // ---------- live re-render offer on segment change ----------
-  ['seg-streamer','seg-volume','seg-refs','seg-div'].forEach(id => {
+  // -------- demo controls --------
+  ['seg-scenario','seg-streamer','seg-volume','seg-refs','seg-div'].forEach(id => {
     $(id).addEventListener('change', () => {
-      if (state.step === 'offer') renderOffer();
+      if (backdrop.classList.contains('open')) renderScenario();
     });
   });
-
-  // ---------- demo buttons ----------
   $('btn-replay').addEventListener('click', () => {
-    localStorage.removeItem('boostyfi_survey_done');
-    state.answer1 = null; state.answer2 = null;
-    document.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
-    document.querySelectorAll('input[data-custom]').forEach(i => i.value = '');
-    $('next-1').disabled = true; $('next-2').disabled = true;
+    localStorage.removeItem('boostyfi_modal_done');
     openModal();
   });
   $('btn-reset').addEventListener('click', () => {
-    localStorage.removeItem('boostyfi_survey_done');
+    localStorage.removeItem('boostyfi_modal_done');
     location.reload();
   });
 
-  // ---------- auto-open ----------
-  if (!localStorage.getItem('boostyfi_survey_done')) {
+  // -------- auto-open once --------
+  if (!localStorage.getItem('boostyfi_modal_done')) {
     setTimeout(openModal, 600);
   }
 })();
 </script>
-
 </body>
 </html>
