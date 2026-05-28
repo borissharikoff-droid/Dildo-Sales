@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>⛏️ Золото Дворфов — idle</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛏️</text></svg>" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="title">⛏️ ЗОЛОТО ДВОРФОВ</div>
+    <div class="resources">
+      <div class="res gold" title="Золото">💰 <span id="gold">0</span></div>
+      <div class="res gps" title="Добыча в секунду">⚒️ <span id="gps">0</span>/сек</div>
+      <div class="res clickv" title="Золота за один удар киркой">👆 <span id="clickVal">1</span></div>
+      <div class="res ale" title="Эль — валюта престижа">🍺 <span id="ale">0</span><small id="aleBonus"></small></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="mine-panel">
+      <div class="mine-hint">Бей по горе киркой — добывай золото!</div>
+      <button id="mineBtn" class="mine" aria-label="Копать">
+        <span class="mountain">⛰️</span>
+        <span class="pick">⛏️</span>
+        <span class="mine-label">КОПАТЬ</span>
+      </button>
+      <div class="mine-sub">Ударов киркой: <span id="clicks">0</span></div>
+      <div id="floats" class="floats"></div>
+    </section>
+
+    <section class="shop-panel">
+      <nav class="tabs">
+        <button class="tab-btn active" data-tab="buildings">🏗️ Постройки</button>
+        <button class="tab-btn" data-tab="upgrades">✨ Улучшения <span id="upgCount" class="badge"></span></button>
+        <button class="tab-btn" data-tab="prestige">🍺 Таверна</button>
+        <button class="tab-btn" data-tab="misc">⚙️ Ещё</button>
+      </nav>
+
+      <div id="tab-buildings" class="tab active">
+        <div class="buyamt">
+          <span>Покупать:</span>
+          <button class="amt-btn active" data-amt="1">×1</button>
+          <button class="amt-btn" data-amt="10">×10</button>
+          <button class="amt-btn" data-amt="100">×100</button>
+          <button class="amt-btn" data-amt="-1">Макс</button>
+        </div>
+        <div id="buildingList" class="building-list"></div>
+      </div>
+
+      <div id="tab-upgrades" class="tab">
+        <p class="tab-intro">Разовые улучшения. Каждое покупается один раз и работает навсегда.</p>
+        <div id="upgradeList" class="upgrade-list"></div>
+        <div id="noUpgrades" class="empty">Сейчас доступных улучшений нет. Копайте дальше — откроются новые!</div>
+        <div class="bought-wrap">
+          <div class="bought-title">Куплено (<span id="boughtCount">0</span>):</div>
+          <div id="boughtList" class="bought-list"></div>
+        </div>
+      </div>
+
+      <div id="tab-prestige" class="tab">
+        <div class="prestige-card">
+          <h2>🍺 Уйти на пир в таверну</h2>
+          <p>Дворфы бросают шахты, пропивают всё золото и хвастаются друг другу. За истории о добытом богатстве вы получаете <b>Эль 🍺</b>.</p>
+          <p>Каждая кружка эля даёт <b>+2%</b> ко <b>всей</b> добыче золота — навсегда.</p>
+          <div class="prestige-stats">
+            <div>Сейчас эля: <b id="pAle">0</b> <span id="pBonus" class="muted"></span></div>
+            <div>Будет получено за пир: <b id="pGain" class="gainval">0</b> 🍺</div>
+            <div class="muted" id="pNext"></div>
+          </div>
+          <button id="prestigeBtn" class="prestige-btn">🍺 Уйти на пир</button>
+          <p class="warn">⚠️ Пир обнуляет золото, всех дворфов, постройки и улучшения. Эль и общая статистика сохраняются.</p>
+        </div>
+      </div>
+
+      <div id="tab-misc" class="tab">
+        <div class="stats-card">
+          <h3>📊 Статистика</h3>
+          <div class="stat-row"><span>Золота сейчас</span><b id="sGold">0</b></div>
+          <div class="stat-row"><span>Добыто за этот заход</span><b id="sRun">0</b></div>
+          <div class="stat-row"><span>Добыто за всё время</span><b id="sAll">0</b></div>
+          <div class="stat-row"><span>Ударов киркой</span><b id="sClicks">0</b></div>
+          <div class="stat-row"><span>Дворфов и построек</span><b id="sBuild">0</b></div>
+          <div class="stat-row"><span>Улучшений куплено</span><b id="sUpg">0</b></div>
+          <div class="stat-row"><span>Эля выпито</span><b id="sAle">0</b></div>
+          <div class="stat-row"><span>В игре</span><b id="sTime">0с</b></div>
+        </div>
+        <div class="save-card">
+          <h3>💾 Сохранение</h3>
+          <p class="muted">Игра сохраняется автоматически в этом браузере каждые 15 секунд.</p>
+          <div class="save-btns">
+            <button id="saveBtn">💾 Сохранить сейчас</button>
+            <button id="exportBtn">📤 Экспорт</button>
+            <button id="importBtn">📥 Импорт</button>
+            <button id="wipeBtn" class="danger">🗑️ Сбросить всё</button>
+          </div>
+          <textarea id="saveBox" class="save-box" placeholder="Сюда попадёт код сохранения при экспорте. Вставьте код и нажмите «Импорт», чтобы загрузить." spellcheck="false"></textarea>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="offlineModal" class="modal hidden">
+    <div class="modal-card">
+      <h2>🍺 С возвращением!</h2>
+      <p>Пока вас не было <b id="offTime">—</b>, дворфы продолжали копать и намахали:</p>
+      <div class="offline-gold">💰 <span id="offGold">0</span></div>
+      <button id="offClose">Забрать золото</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="game.js" defer></script>
+</body>
+</html>
